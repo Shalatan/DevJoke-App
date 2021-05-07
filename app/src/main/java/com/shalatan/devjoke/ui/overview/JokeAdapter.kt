@@ -31,7 +31,12 @@ class JokeAdapter : ListAdapter<Joke, JokeAdapter.JokeViewHolder>(DiffCallBack) 
         parent: ViewGroup,
         viewType: Int
     ): JokeViewHolder {
-        return JokeViewHolder(ItemJokeBinding.inflate(LayoutInflater.from(parent.context)))
+        return JokeViewHolder(
+            ItemJokeBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent, false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: JokeViewHolder, position: Int) {
