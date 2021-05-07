@@ -8,3 +8,5 @@ data class Joke(
     val jokeShared: Int = 0
 )
 
+//This app is developed only for entertainment purpose, no developers were hurt in this app
+
