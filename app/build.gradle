@@ -63,9 +63,14 @@ dependencies {
     // Architectural Components
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
 
+    // Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:2.3.0"
+    implementation "androidx.room:room-runtime:2.3.0"
+    kapt "androidx.room:room-compiler:2.3.0"
+
     // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0-RC-native-mt'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0-RC-native-mt'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.3.9-native-mt'
     // Firebase Coroutines
 

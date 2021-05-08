@@ -23,7 +23,6 @@ class OverviewFragment : Fragment() {
     private lateinit var binding: FragmentOverviewBinding
     private lateinit var arrayAdapter: ArrayAdapter<Joke>
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,18 +32,27 @@ class OverviewFragment : Fragment() {
         binding = FragmentOverviewBinding.inflate(inflater)
         val dataSource = JokeDatabase.getInstance(requireContext()).jokeDAO
 
-        viewModelFactory = OverviewViewModelFactory(application,dataSource)
+        viewModelFactory = OverviewViewModelFactory(application, dataSource)
         viewModel = ViewModelProvider(this, viewModelFactory).get(OverviewViewModel::class.java)
 
-        val rv = binding.jokesViewer
+        val jokesViewPager = binding.jokesViewer
         val jokeAdapter = JokeAdapter()
-        rv.adapter = jokeAdapter
-        setUpPosterViewPager(rv)
+        jokesViewPager.adapter = jokeAdapter
+        setUpPosterViewPager(jokesViewPager)
+        jokesViewPager.currentItem = 4
 
+        //load list of jokes from viewModel
         viewModel.jokesData.observe(viewLifecycleOwner, Observer {
             Log.e("Jokes in Fragment", it.toString())
             it.let(jokeAdapter::submitList)
         })
+
+        //save the current joke
+        binding.likeButton.setOnClickListener {
+            Log.e("OverviewFragment : ", "savedButtonClicked")
+            val joke = jokesViewPager.currentItem
+            viewModel.saveJoke(joke)
+        }
 
         return binding.root
     }

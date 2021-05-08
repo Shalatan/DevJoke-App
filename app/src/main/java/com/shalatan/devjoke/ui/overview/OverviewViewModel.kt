@@ -5,9 +5,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shalatan.devjoke.data.Joke
 import com.shalatan.devjoke.database.JokeDAO
+import com.shalatan.devjoke.database.SavedJoke
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -38,7 +40,11 @@ class OverviewViewModel(val application: Application, val db: JokeDAO) : ViewMod
         }
     }
 
-    fun saveJoke() {
-        Log.e("HAHA", "HEHE")
+    fun saveJoke(position: Int) {
+        val joke = _jokesData.value?.get(position)
+        val savedJoke = SavedJoke(joke!!.jokeId, joke.jokeText, false, 0, 0)
+        viewModelScope.launch {
+            db.insert(savedJoke)
+        }
     }
 }
