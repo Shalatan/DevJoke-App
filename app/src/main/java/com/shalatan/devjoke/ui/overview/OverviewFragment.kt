@@ -10,10 +10,11 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.shalatan.devjoke.data.Joke
+import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
-
 
 class OverviewFragment : Fragment() {
 
@@ -28,12 +29,14 @@ class OverviewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        val application = requireNotNull(activity).application
         binding = FragmentOverviewBinding.inflate(inflater)
+        val dataSource = JokeDatabase.getInstance(requireContext()).jokeDAO
 
-        viewModelFactory = OverviewViewModelFactory(requireNotNull(activity).application)
+        viewModelFactory = OverviewViewModelFactory(application,dataSource)
         viewModel = ViewModelProvider(this, viewModelFactory).get(OverviewViewModel::class.java)
 
-        val rv = binding.overviewJokesRecyclerview
+        val rv = binding.jokesViewer
         val jokeAdapter = JokeAdapter()
         rv.adapter = jokeAdapter
         setUpPosterViewPager(rv)

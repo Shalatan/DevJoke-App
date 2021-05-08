@@ -5,18 +5,16 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import com.shalatan.devjoke.data.Joke
-import com.shalatan.devjoke.remote.JokesDatabase
+import com.shalatan.devjoke.database.JokeDAO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class OverviewViewModel(val application: Application) : ViewModel() {
+class OverviewViewModel(val application: Application, val db: JokeDAO) : ViewModel() {
 
     private val _jokesData = MutableLiveData<List<Joke>>()
     val jokesData: LiveData<List<Joke>>
@@ -40,4 +38,7 @@ class OverviewViewModel(val application: Application) : ViewModel() {
         }
     }
 
+    fun saveJoke() {
+        Log.e("HAHA", "HEHE")
+    }
 }

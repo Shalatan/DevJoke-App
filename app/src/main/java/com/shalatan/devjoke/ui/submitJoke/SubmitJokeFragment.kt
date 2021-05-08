@@ -19,7 +19,7 @@ import com.shalatan.devjoke.databinding.FragmentSubmitJokeBinding
 class SubmitJokeFragment : Fragment() {
 
     private lateinit var binding: FragmentSubmitJokeBinding
-    private var jokeNumber = 1
+    private var jokeNumber = 12
 
 
     override fun onCreateView(
