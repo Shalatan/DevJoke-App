@@ -22,6 +22,10 @@ class OverviewViewModel(val application: Application, val db: JokeDAO) : ViewMod
     val jokesData: LiveData<List<Joke>>
         get() = _jokesData
 
+    private val _isJokeExistInDb = MutableLiveData<Boolean>()
+    val isJokeExistInDb: LiveData<Boolean>
+        get() = _isJokeExistInDb
+
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -32,6 +36,9 @@ class OverviewViewModel(val application: Application, val db: JokeDAO) : ViewMod
         }
     }
 
+    /**
+     * fetch jokes from firestore
+     */
     private suspend fun getJokes() {
         if (_jokesData.value.isNullOrEmpty()) {
             _jokesData.value = FirebaseFirestore.getInstance().collection("jokes").get().await()
@@ -40,11 +47,38 @@ class OverviewViewModel(val application: Application, val db: JokeDAO) : ViewMod
         }
     }
 
+    /**
+     * get the current item's position of viewPager and save that joke in ROOM database
+     */
     fun saveJoke(position: Int) {
         val joke = _jokesData.value?.get(position)
         val savedJoke = SavedJoke(joke!!.jokeId, joke.jokeText, false, 0, 0)
-        viewModelScope.launch {
+        coroutineScope.launch {
             db.insert(savedJoke)
+        }
+    }
+
+    /**
+     * get the current item's position of viewPager and remove that joke from ROOM database
+     */
+    fun deleteJoke(position: Int) {
+        val joke = _jokesData.value?.get(position)
+        val savedJoke = SavedJoke(joke!!.jokeId, joke.jokeText, false, 0, 0)
+        viewModelScope.launch {
+            db.delete(savedJoke)
+        }
+    }
+
+    /**
+     * check if joke at 'position' already exists or not
+     */
+    fun isJokeSavedInDatabase(position: Int) {
+        val currentJokeId = _jokesData.value?.get(position)!!.jokeId
+        var jokeSaved = 0
+        coroutineScope.launch {
+            jokeSaved = db.isJokeSaved(currentJokeId)
+            _isJokeExistInDb.value = jokeSaved != 0
+            Log.e("OverviewViewModel : ", jokeSaved.toString())
         }
     }
 }

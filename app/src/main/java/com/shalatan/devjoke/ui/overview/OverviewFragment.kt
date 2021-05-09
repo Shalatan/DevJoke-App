@@ -5,14 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import com.shalatan.devjoke.data.Joke
+import com.shalatan.devjoke.R
 import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
 
@@ -21,7 +19,7 @@ class OverviewFragment : Fragment() {
     private lateinit var viewModelFactory: OverviewViewModelFactory
     private lateinit var viewModel: OverviewViewModel
     private lateinit var binding: FragmentOverviewBinding
-    private lateinit var arrayAdapter: ArrayAdapter<Joke>
+    private var isRedActive = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,26 +33,72 @@ class OverviewFragment : Fragment() {
         viewModelFactory = OverviewViewModelFactory(application, dataSource)
         viewModel = ViewModelProvider(this, viewModelFactory).get(OverviewViewModel::class.java)
 
+        //set up view pager
         val jokesViewPager = binding.jokesViewer
         val jokeAdapter = JokeAdapter()
         jokesViewPager.adapter = jokeAdapter
         setUpPosterViewPager(jokesViewPager)
-        jokesViewPager.currentItem = 4
 
-        //load list of jokes from viewModel
+        //observe jokesData and submit it to viewPager adapter
         viewModel.jokesData.observe(viewLifecycleOwner, Observer {
             Log.e("Jokes in Fragment", it.toString())
             it.let(jokeAdapter::submitList)
         })
 
-        //save the current joke
+        //when scrolled, check if new joke is or not already liked by the user
+        jokesViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                viewModel.isJokeSavedInDatabase(position)
+                makeButtonLikeable()
+            }
+        })
+
+        //observe isJokeExistInDb to check if current joke is already liked or not
+        //it = true when joke is already liked
+        viewModel.isJokeExistInDb.observe(viewLifecycleOwner, Observer {
+            Log.e("OverviewFragment Joke Exist", it.toString())
+            if (it) {
+                makeButtonDisLikeable()
+            } else {
+                makeButtonLikeable()
+            }
+        })
+
+        //save the current joke and make necessary changes to button
         binding.likeButton.setOnClickListener {
-            Log.e("OverviewFragment : ", "savedButtonClicked")
-            val joke = jokesViewPager.currentItem
-            viewModel.saveJoke(joke)
+            val jokePosition = jokesViewPager.currentItem
+            if (isRedActive) {
+                viewModel.deleteJoke(jokePosition)
+                Log.e("OverviewFragment : ", "deleted joke")
+                makeButtonLikeable()
+            } else {
+                viewModel.saveJoke(jokePosition)
+                Log.e("OverviewFragment : ", "inserted joke")
+                makeButtonDisLikeable()
+            }
         }
 
         return binding.root
+    }
+
+    /**
+     * set the drawable to red heart when user likes the current joke or current joke was already liked
+     */
+    private fun makeButtonDisLikeable() {
+        binding.likeButton.setImageResource(R.drawable.ic_red_heart)
+        isRedActive = true
+    }
+
+    /**
+     * set the drawable to white heart when user unlikes the joke or current joke was not already liked
+     */
+    private fun makeButtonLikeable() {
+        binding.likeButton.setImageResource(R.drawable.ic_heart)
+        isRedActive = false
     }
 
 
