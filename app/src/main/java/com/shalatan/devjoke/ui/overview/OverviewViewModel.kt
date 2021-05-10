@@ -43,7 +43,7 @@ class OverviewViewModel(val application: Application, val db: JokeDAO) : ViewMod
         if (_jokesData.value.isNullOrEmpty()) {
             _jokesData.value = FirebaseFirestore.getInstance().collection("jokes").get().await()
                 .toObjects(Joke::class.java)
-            Log.e("Jokes in View model : ", _jokesData.value.toString())
+            Log.e("OverviewViewModel : ", "Jokes Fetched")
         }
     }
 

@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.ViewCompat
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -32,6 +33,9 @@ class OverviewFragment : Fragment() {
     private lateinit var viewModel: OverviewViewModel
     private lateinit var binding: FragmentOverviewBinding
     private var isRedActive = false
+//    private val viewPagerPageString = "VIEW_PAGER_PAGE_NUMBER"
+//    private var viewPagerPageNumber = 0
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,11 +57,11 @@ class OverviewFragment : Fragment() {
 
         //observe jokesData and submit it to viewPager adapter
         viewModel.jokesData.observe(viewLifecycleOwner, Observer {
-            Log.e("Jokes in Fragment", it.toString())
             it.let(jokeAdapter::submitList)
+            Log.e("OverviewFragment : ", "Jokes Fetched")
         })
 
-        //when scrolled, check if new joke is or not already liked by the user
+        //when scrolled, check if new joke is already liked by the user
         jokesViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrolled(
                 position: Int,
@@ -66,6 +70,7 @@ class OverviewFragment : Fragment() {
             ) {
                 viewModel.isJokeSavedInDatabase(position)
                 makeButtonLikeable()
+//                viewPagerPageNumber = position
             }
         })
 
@@ -100,11 +105,29 @@ class OverviewFragment : Fragment() {
 
         //share carView as image
         binding.shareButton.setOnClickListener {
-            shareCardView(binding.jokesViewer)
+            shareCardView(binding.jokesViewer.children.single())
+        }
+
+        binding.savedListButton.setOnClickListener {
+            jokesViewPager.currentItem = 5
         }
 
         return binding.root
     }
+
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putInt(viewPagerPageString, viewPagerPageNumber)
+//        Log.e("onSaveInstanceState Page Number = ", outState.getInt(viewPagerPageString).toString())
+//    }
+//
+//    override fun onActivityCreated(savedInstanceState: Bundle?) {
+//        super.onActivityCreated(savedInstanceState)
+//        if (savedInstanceState != null) {
+//            val a = savedInstanceState.getInt(viewPagerPageString)
+//            Log.e("onActivityCreated Page Number", a.toString())
+//        }
+//    }
 
     /**
      * set the drawable to red heart when user likes the current joke or current joke was already liked
@@ -127,7 +150,7 @@ class OverviewFragment : Fragment() {
      */
     private fun shareCardView(view: View) {
         val bitmap =
-            Bitmap.createBitmap((view.height * 0.95).toInt(), view.height, Bitmap.Config.ARGB_8888)
+            Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         val bgDrawable = view.background
         if (bgDrawable != null) bgDrawable.draw(canvas) else canvas.drawColor(Color.WHITE)
