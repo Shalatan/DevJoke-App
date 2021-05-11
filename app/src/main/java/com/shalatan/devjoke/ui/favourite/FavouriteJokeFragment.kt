@@ -1,4 +1,4 @@
-package com.shalatan.devjoke.ui.overview
+package com.shalatan.devjoke.ui.favourite
 
 import android.content.Context
 import android.content.Intent
@@ -22,18 +22,22 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.database.JokeDatabase
+import com.shalatan.devjoke.databinding.FragmentFavouriteJokeBinding
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
+import com.shalatan.devjoke.ui.overview.JokeAdapter
+import com.shalatan.devjoke.ui.overview.OverviewViewModel
+import com.shalatan.devjoke.ui.overview.OverviewViewModelFactory
 import java.io.ByteArrayOutputStream
 import java.util.*
 
 
-class OverviewFragment : Fragment() {
+class FavouriteJokeFragment : Fragment() {
 
     private val SHARE_TEXT =
         "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more such DevJokes and share your DevJokes/Puns with other devs"
     private lateinit var viewModelFactory: OverviewViewModelFactory
     private lateinit var viewModel: OverviewViewModel
-    private lateinit var binding: FragmentOverviewBinding
+    private lateinit var binding: FragmentFavouriteJokeBinding
     private var isRedActive = false
 
     override fun onCreateView(
@@ -41,7 +45,7 @@ class OverviewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentOverviewBinding.inflate(inflater)
+        binding = FragmentFavouriteJokeBinding.inflate(inflater)
         val dataSource = JokeDatabase.getInstance(requireContext()).jokeDAO
 
         viewModelFactory = OverviewViewModelFactory(dataSource)
@@ -49,83 +53,31 @@ class OverviewFragment : Fragment() {
 
         //set up view pager
         val jokesViewPager = binding.jokesViewer
-        val jokeAdapter = JokeAdapter()
+        val jokeAdapter = FavouriteJokeAdapter()
         jokesViewPager.adapter = jokeAdapter
         setUpPosterViewPager(jokesViewPager)
 
         //observe jokesData and submit it to viewPager adapter
-        viewModel.jokesData.observe(viewLifecycleOwner, Observer {
+        viewModel.favouriteJokes.observe(viewLifecycleOwner, Observer {
             it.let(jokeAdapter::submitList)
             Log.e("OverviewFragment : ", "Jokes Fetched")
         })
-
-        //when scrolled, check if new joke is already liked by the user
-        jokesViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-                viewModel.isJokeSavedInDatabase(position)
-                makeButtonLikeable()
-            }
-        })
-
-        //observe isJokeExistInDb to check if current joke is already liked or not
-        //it = true when joke is already liked
-        viewModel.isJokeExistInDb.observe(viewLifecycleOwner, Observer {
-            Log.e("OverviewFragment Joke Exist", it.toString())
-            if (it) {
-                makeButtonDisLikeable()
-            } else {
-                makeButtonLikeable()
-            }
-        })
-
-        //save the current joke and make necessary changes to button
-        binding.likeButton.setOnClickListener {
-            val jokePosition = jokesViewPager.currentItem
-            if (isRedActive) {
-                viewModel.deleteJoke(jokePosition)
-                Toast.makeText(requireContext(), "Joke Removed from Favourites", Toast.LENGTH_SHORT)
-                    .show()
-                Log.e("OverviewFragment : ", "deleted joke")
-                makeButtonLikeable()
-            } else {
-                viewModel.saveJoke(jokePosition)
-                Toast.makeText(requireContext(), "Joke Added to Favourites", Toast.LENGTH_SHORT)
-                    .show()
-                Log.e("OverviewFragment : ", "inserted joke")
-                makeButtonDisLikeable()
-            }
-        }
 
         //share carView as image
         binding.shareButton.setOnClickListener {
             shareCardView(binding.jokesViewer.children.single())
         }
 
+        binding.likeButton.setOnClickListener {
+            val position = jokesViewPager.currentItem
+            viewModel.deleteSavedJoke(position)
+        }
+
         binding.savedListButton.setOnClickListener {
-            findNavController().navigate(OverviewFragmentDirections.actionOverviewFragmentToFavouriteJokeFragment())
+            findNavController().navigate(FavouriteJokeFragmentDirections.actionFavouriteJokeFragmentToOverviewFragment())
         }
 
         return binding.root
-    }
-
-    /**
-     * set the drawable to red heart when user likes the current joke or current joke was already liked
-     */
-    private fun makeButtonDisLikeable() {
-        binding.likeButton.setImageResource(R.drawable.ic_red_heart)
-        isRedActive = true
-    }
-
-    /**
-     * set the drawable to white heart when user unlikes the joke or current joke was not already liked
-     */
-    private fun makeButtonLikeable() {
-        binding.likeButton.setImageResource(R.drawable.ic_heart)
-        isRedActive = false
     }
 
     /**

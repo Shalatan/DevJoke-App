@@ -7,13 +7,27 @@
     <fragment
         android:id="@+id/overviewFragment"
         android:name="com.shalatan.devjoke.ui.overview.OverviewFragment"
-        android:label="OverviewFragment" >
+        android:label="OverviewFragment">
         <action
             android:id="@+id/action_overviewFragment_to_submitJokeFragment"
             app:destination="@id/submitJokeFragment" />
+        <action
+            android:id="@+id/action_overviewFragment_to_favouriteJokeFragment"
+            app:destination="@id/favouriteJokeFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/submitJokeFragment"
         android:name="com.shalatan.devjoke.ui.submitJoke.SubmitJokeFragment"
         android:label="SubmitJokeFragment" />
+    <fragment
+        android:id="@+id/favouriteJokeFragment"
+        android:name="com.shalatan.devjoke.ui.favourite.FavouriteJokeFragment"
+        android:label="FavouriteJokeFragment">
+        <action
+            android:id="@+id/action_favouriteJokeFragment_to_overviewFragment"
+            app:destination="@id/overviewFragment"
+            app:popUpTo="@id/overviewFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

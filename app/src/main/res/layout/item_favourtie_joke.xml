@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="savedJoke"
+            type="com.shalatan.devjoke.database.SavedJoke" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="36dp"
+        android:elevation="8dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="24dp"
+        app:strokeColor="#FFFFFF"
+        app:strokeWidth="1dp">
+        <!--        app:cardViewColor="@{joke.jokeId}"-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="400dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="serif"
+                android:gravity="center"
+                android:hint="A card has a container and an optional thumbnail, header text, secondary text, media, supporting text, buttons and icons"
+                android:text="@{savedJoke.jokeText}"
+                android:textColor="@color/mid_emphasis_text"
+                android:textSize="28sp" />
+
+            <ImageView
+                android:id="@+id/devJokeLogo"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/app_logo"
+                app:layout_constraintBottom_toTopOf="@id/devJokeText"
+                app:layout_constraintEnd_toEndOf="@+id/devJokeText"
+                app:layout_constraintStart_toStartOf="@id/devJokeText" />
+
+            <TextView
+                android:id="@+id/devJokeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:layout_marginBottom="22dp"
+                android:text="DevJoke App"
+                android:textColor="@color/high_emphasis_text"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

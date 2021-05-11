@@ -16,7 +16,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class OverviewViewModel(val application: Application, val db: JokeDAO) : ViewModel() {
+class OverviewViewModel(val db: JokeDAO) : ViewModel() {
 
     private val _jokesData = MutableLiveData<List<Joke>>()
     val jokesData: LiveData<List<Joke>>
@@ -25,6 +25,8 @@ class OverviewViewModel(val application: Application, val db: JokeDAO) : ViewMod
     private val _isJokeExistInDb = MutableLiveData<Boolean>()
     val isJokeExistInDb: LiveData<Boolean>
         get() = _isJokeExistInDb
+
+    val favouriteJokes: LiveData<List<SavedJoke>> = db.getAllSavedJokes()
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -66,6 +68,15 @@ class OverviewViewModel(val application: Application, val db: JokeDAO) : ViewMod
         val savedJoke = SavedJoke(joke!!.jokeId, joke.jokeText, false, 0, 0)
         viewModelScope.launch {
             db.delete(savedJoke)
+        }
+    }
+
+    fun deleteSavedJoke(position: Int) {
+        val savedJoke = favouriteJokes.value?.get(position)
+        viewModelScope.launch {
+            if (savedJoke != null) {
+                db.delete(savedJoke)
+            }
         }
     }
 
