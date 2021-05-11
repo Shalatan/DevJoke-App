@@ -23,6 +23,7 @@ import com.shalatan.devjoke.R
 import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 
 class OverviewFragment : Fragment() {
@@ -115,20 +116,6 @@ class OverviewFragment : Fragment() {
         return binding.root
     }
 
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        outState.putInt(viewPagerPageString, viewPagerPageNumber)
-//        Log.e("onSaveInstanceState Page Number = ", outState.getInt(viewPagerPageString).toString())
-//    }
-//
-//    override fun onActivityCreated(savedInstanceState: Bundle?) {
-//        super.onActivityCreated(savedInstanceState)
-//        if (savedInstanceState != null) {
-//            val a = savedInstanceState.getInt(viewPagerPageString)
-//            Log.e("onActivityCreated Page Number", a.toString())
-//        }
-//    }
-
     /**
      * set the drawable to red heart when user likes the current joke or current joke was already liked
      */
@@ -148,21 +135,17 @@ class OverviewFragment : Fragment() {
     /**
      * function to get bitmap from viewPager and share ias image
      */
+
     private fun shareCardView(view: View) {
-        val bitmap =
-            Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         val bgDrawable = view.background
         if (bgDrawable != null) bgDrawable.draw(canvas) else canvas.drawColor(Color.WHITE)
         view.draw(canvas)
-        val uri = getImageUri(requireContext(), bitmap)
 
+        val uri = getImageUri(requireContext(), bitmap)
         val intent = Intent(Intent.ACTION_SEND)
         intent.putExtra(Intent.EXTRA_STREAM, uri)
-        intent.putExtra(
-            Intent.EXTRA_TEXT,
-            SHARE_TEXT
-        )
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.type = "image/png"
         startActivity(intent)
@@ -175,10 +158,7 @@ class OverviewFragment : Fragment() {
         val bytes = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path = MediaStore.Images.Media.insertImage(
-            inContext.contentResolver,
-            bitmap,
-            "DevJoke",
-            null
+            inContext.contentResolver, bitmap, "IMG_" + Calendar.getInstance().time, null
         )
         return Uri.parse(path)
     }
