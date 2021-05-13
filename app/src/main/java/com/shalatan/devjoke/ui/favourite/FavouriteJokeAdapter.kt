@@ -5,10 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.shalatan.devjoke.data.Joke
 import com.shalatan.devjoke.database.SavedJoke
 import com.shalatan.devjoke.databinding.ItemFavourtieJokeBinding
-import com.shalatan.devjoke.databinding.ItemJokeBinding
 
 class FavouriteJokeAdapter :
     ListAdapter<SavedJoke, FavouriteJokeAdapter.JokeViewHolder>(DiffCallBack) {

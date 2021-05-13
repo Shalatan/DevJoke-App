@@ -12,19 +12,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import com.shalatan.devjoke.R
 import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.databinding.FragmentFavouriteJokeBinding
-import com.shalatan.devjoke.databinding.FragmentOverviewBinding
-import com.shalatan.devjoke.ui.overview.JokeAdapter
 import com.shalatan.devjoke.ui.overview.OverviewViewModel
 import com.shalatan.devjoke.ui.overview.OverviewViewModelFactory
 import java.io.ByteArrayOutputStream
@@ -33,12 +28,11 @@ import java.util.*
 
 class FavouriteJokeFragment : Fragment() {
 
-    private val SHARE_TEXT =
+    private val shareText =
         "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more such DevJokes and share your DevJokes/Puns with other devs"
-    private lateinit var viewModelFactory: OverviewViewModelFactory
-    private lateinit var viewModel: OverviewViewModel
+    private lateinit var viewModelFactory: FavouriteJokeViewModelFactory
+    private lateinit var viewModel: FavouriteJokeViewModel
     private lateinit var binding: FragmentFavouriteJokeBinding
-    private var isRedActive = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,8 +42,8 @@ class FavouriteJokeFragment : Fragment() {
         binding = FragmentFavouriteJokeBinding.inflate(inflater)
         val dataSource = JokeDatabase.getInstance(requireContext()).jokeDAO
 
-        viewModelFactory = OverviewViewModelFactory(dataSource)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(OverviewViewModel::class.java)
+        viewModelFactory = FavouriteJokeViewModelFactory(dataSource)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(FavouriteJokeViewModel::class.java)
 
         //set up view pager
         val jokesViewPager = binding.jokesViewer
@@ -58,7 +52,7 @@ class FavouriteJokeFragment : Fragment() {
         setUpPosterViewPager(jokesViewPager)
 
         //observe jokesData and submit it to viewPager adapter
-        viewModel.favouriteJokes.observe(viewLifecycleOwner, Observer {
+        viewModel.favouriteJokes.observe(viewLifecycleOwner, {
             it.let(jokeAdapter::submitList)
             Log.e("OverviewFragment : ", "Jokes Fetched")
         })
@@ -93,6 +87,7 @@ class FavouriteJokeFragment : Fragment() {
         val uri = getImageUri(requireContext(), bitmap)
         val intent = Intent(Intent.ACTION_SEND)
         intent.putExtra(Intent.EXTRA_STREAM, uri)
+        intent.putExtra(Intent.EXTRA_TEXT,shareText)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.type = "image/png"
         startActivity(intent)

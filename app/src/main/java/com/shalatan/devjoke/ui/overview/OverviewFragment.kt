@@ -16,7 +16,6 @@ import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
@@ -29,7 +28,7 @@ import java.util.*
 
 class OverviewFragment : Fragment() {
 
-    private val SHARE_TEXT =
+    private val shareText =
         "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more such DevJokes and share your DevJokes/Puns with other devs"
     private lateinit var viewModelFactory: OverviewViewModelFactory
     private lateinit var viewModel: OverviewViewModel
@@ -54,7 +53,7 @@ class OverviewFragment : Fragment() {
         setUpPosterViewPager(jokesViewPager)
 
         //observe jokesData and submit it to viewPager adapter
-        viewModel.jokesData.observe(viewLifecycleOwner, Observer {
+        viewModel.jokesData.observe(viewLifecycleOwner, {
             it.let(jokeAdapter::submitList)
             Log.e("OverviewFragment : ", "Jokes Fetched")
         })
@@ -73,7 +72,7 @@ class OverviewFragment : Fragment() {
 
         //observe isJokeExistInDb to check if current joke is already liked or not
         //it = true when joke is already liked
-        viewModel.isJokeExistInDb.observe(viewLifecycleOwner, Observer {
+        viewModel.isJokeExistInDb.observe(viewLifecycleOwner, {
             Log.e("OverviewFragment Joke Exist", it.toString())
             if (it) {
                 makeButtonDisLikeable()
@@ -109,6 +108,10 @@ class OverviewFragment : Fragment() {
             findNavController().navigate(OverviewFragmentDirections.actionOverviewFragmentToFavouriteJokeFragment())
         }
 
+        binding.addJokeButton.setOnClickListener {
+            findNavController().navigate(OverviewFragmentDirections.actionOverviewFragmentToSubmitJokeFragment())
+        }
+
         return binding.root
     }
 
@@ -141,6 +144,7 @@ class OverviewFragment : Fragment() {
         val uri = getImageUri(requireContext(), bitmap)
         val intent = Intent(Intent.ACTION_SEND)
         intent.putExtra(Intent.EXTRA_STREAM, uri)
+        intent.putExtra(Intent.EXTRA_TEXT,shareText)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.type = "image/png"
         startActivity(intent)

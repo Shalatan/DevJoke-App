@@ -1,6 +1,5 @@
 package com.shalatan.devjoke.ui.overview
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class OverviewViewModel(val db: JokeDAO) : ViewModel() {
+class OverviewViewModel(private val db: JokeDAO) : ViewModel() {
 
     private val _jokesData = MutableLiveData<List<Joke>>()
     val jokesData: LiveData<List<Joke>>
@@ -71,23 +70,13 @@ class OverviewViewModel(val db: JokeDAO) : ViewModel() {
         }
     }
 
-    fun deleteSavedJoke(position: Int) {
-        val savedJoke = favouriteJokes.value?.get(position)
-        viewModelScope.launch {
-            if (savedJoke != null) {
-                db.delete(savedJoke)
-            }
-        }
-    }
-
     /**
      * check if joke at 'position' already exists or not
      */
     fun isJokeSavedInDatabase(position: Int) {
         val currentJokeId = _jokesData.value?.get(position)!!.jokeId
-        var jokeSaved = 0
         coroutineScope.launch {
-            jokeSaved = db.isJokeSaved(currentJokeId)
+            val jokeSaved = db.isJokeSaved(currentJokeId)
             _isJokeExistInDb.value = jokeSaved != 0
             Log.e("OverviewViewModel : ", jokeSaved.toString())
         }
