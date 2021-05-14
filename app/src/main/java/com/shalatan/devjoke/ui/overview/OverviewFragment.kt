@@ -22,6 +22,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
+import com.shalatan.devjoke.transformers.ZoomOutPageTransformer
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -50,7 +51,8 @@ class OverviewFragment : Fragment() {
         val jokesViewPager = binding.jokesViewer
         val jokeAdapter = JokeAdapter()
         jokesViewPager.adapter = jokeAdapter
-        setUpPosterViewPager(jokesViewPager)
+        jokesViewPager.setPageTransformer(ZoomOutPageTransformer())
+//        setUpPosterViewPager(jokesViewPager)
 
         //observe jokesData and submit it to viewPager adapter
         viewModel.jokesData.observe(viewLifecycleOwner, {
@@ -163,29 +165,29 @@ class OverviewFragment : Fragment() {
     }
 
 
-    /**
-     * function to make view pager view multiple items
-     */
-    private fun setUpPosterViewPager(jokeViewPager: ViewPager2) {
-        with(jokeViewPager) {
-            clipToPadding = false
-            clipChildren = false
-            offscreenPageLimit = 3
-        }
-        val pageMarginPx = 20 * resources.displayMetrics.density
-        val offsetPx = 15 * resources.displayMetrics.density
-        jokeViewPager.setPageTransformer { page, position ->
-            val viewPager = page.parent.parent as ViewPager2
-            val offset = position * -(2 * offsetPx + pageMarginPx)
-            if (viewPager.orientation == ViewPager2.ORIENTATION_HORIZONTAL) {
-                if (ViewCompat.getLayoutDirection(viewPager) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-                    page.translationX = -offset
-                } else {
-                    page.translationX = offset
-                }
-            } else {
-                page.translationY = offset
-            }
-        }
-    }
+//    /**
+//     * function to make view pager view multiple items
+//     */
+//    private fun setUpPosterViewPager(jokeViewPager: ViewPager2) {
+//        with(jokeViewPager) {
+//            clipToPadding = false
+//            clipChildren = false
+//            offscreenPageLimit = 3
+//        }
+//        val pageMarginPx = 20 * resources.displayMetrics.density
+//        val offsetPx = 15 * resources.displayMetrics.density
+//        jokeViewPager.setPageTransformer { page, position ->
+//            val viewPager = page.parent.parent as ViewPager2
+//            val offset = position * -(2 * offsetPx + pageMarginPx)
+//            if (viewPager.orientation == ViewPager2.ORIENTATION_HORIZONTAL) {
+//                if (ViewCompat.getLayoutDirection(viewPager) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+//                    page.translationX = -offset
+//                } else {
+//                    page.translationX = offset
+//                }
+//            } else {
+//                page.translationY = offset
+//            }
+//        }
+//    }
 }

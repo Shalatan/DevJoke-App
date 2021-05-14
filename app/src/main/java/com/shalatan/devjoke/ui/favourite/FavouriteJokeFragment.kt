@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.databinding.FragmentFavouriteJokeBinding
+import com.shalatan.devjoke.transformers.ZoomOutPageTransformer
 import com.shalatan.devjoke.ui.overview.OverviewViewModel
 import com.shalatan.devjoke.ui.overview.OverviewViewModelFactory
 import java.io.ByteArrayOutputStream
@@ -43,13 +44,14 @@ class FavouriteJokeFragment : Fragment() {
         val dataSource = JokeDatabase.getInstance(requireContext()).jokeDAO
 
         viewModelFactory = FavouriteJokeViewModelFactory(dataSource)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(FavouriteJokeViewModel::class.java)
+        viewModel =
+            ViewModelProvider(this, viewModelFactory).get(FavouriteJokeViewModel::class.java)
 
         //set up view pager
         val jokesViewPager = binding.jokesViewer
         val jokeAdapter = FavouriteJokeAdapter()
         jokesViewPager.adapter = jokeAdapter
-        setUpPosterViewPager(jokesViewPager)
+        jokesViewPager.setPageTransformer(ZoomOutPageTransformer())
 
         //observe jokesData and submit it to viewPager adapter
         viewModel.favouriteJokes.observe(viewLifecycleOwner, {
@@ -87,7 +89,7 @@ class FavouriteJokeFragment : Fragment() {
         val uri = getImageUri(requireContext(), bitmap)
         val intent = Intent(Intent.ACTION_SEND)
         intent.putExtra(Intent.EXTRA_STREAM, uri)
-        intent.putExtra(Intent.EXTRA_TEXT,shareText)
+        intent.putExtra(Intent.EXTRA_TEXT, shareText)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.type = "image/png"
         startActivity(intent)
@@ -106,29 +108,29 @@ class FavouriteJokeFragment : Fragment() {
     }
 
 
-    /**
-     * function to make view pager view multiple items
-     */
-    private fun setUpPosterViewPager(jokeViewPager: ViewPager2) {
-        with(jokeViewPager) {
-            clipToPadding = false
-            clipChildren = false
-            offscreenPageLimit = 3
-        }
-        val pageMarginPx = 20 * resources.displayMetrics.density
-        val offsetPx = 15 * resources.displayMetrics.density
-        jokeViewPager.setPageTransformer { page, position ->
-            val viewPager = page.parent.parent as ViewPager2
-            val offset = position * -(2 * offsetPx + pageMarginPx)
-            if (viewPager.orientation == ViewPager2.ORIENTATION_HORIZONTAL) {
-                if (ViewCompat.getLayoutDirection(viewPager) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-                    page.translationX = -offset
-                } else {
-                    page.translationX = offset
-                }
-            } else {
-                page.translationY = offset
-            }
-        }
-    }
+//    /**
+//     * function to make view pager view multiple items
+//     */
+//    private fun setUpPosterViewPager(jokeViewPager: ViewPager2) {
+//        with(jokeViewPager) {
+//            clipToPadding = false
+//            clipChildren = false
+//            offscreenPageLimit = 3
+//        }
+//        val pageMarginPx = 20 * resources.displayMetrics.density
+//        val offsetPx = 15 * resources.displayMetrics.density
+//        jokeViewPager.setPageTransformer { page, position ->
+//            val viewPager = page.parent.parent as ViewPager2
+//            val offset = position * -(2 * offsetPx + pageMarginPx)
+//            if (viewPager.orientation == ViewPager2.ORIENTATION_HORIZONTAL) {
+//                if (ViewCompat.getLayoutDirection(viewPager) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+//                    page.translationX = -offset
+//                } else {
+//                    page.translationX = offset
+//                }
+//            } else {
+//                page.translationY = offset
+//            }
+//        }
+//    }
 }

@@ -25,8 +25,6 @@ class OverviewViewModel(private val db: JokeDAO) : ViewModel() {
     val isJokeExistInDb: LiveData<Boolean>
         get() = _isJokeExistInDb
 
-    val favouriteJokes: LiveData<List<SavedJoke>> = db.getAllSavedJokes()
-
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
