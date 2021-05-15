@@ -1,13 +1,12 @@
 package com.shalatan.devjoke.ui.overview
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shalatan.devjoke.data.Joke
 import com.shalatan.devjoke.database.JokeDAO
+import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.database.SavedJoke
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +14,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class OverviewViewModel(private val db: JokeDAO) : ViewModel() {
+class OverviewViewModel(application: Application) : ViewModel() {
+
+    private val db: JokeDAO = JokeDatabase.getInstance(application).jokeDAO
 
     private val _jokesData = MutableLiveData<List<Joke>>()
     val jokesData: LiveData<List<Joke>>
@@ -76,7 +77,7 @@ class OverviewViewModel(private val db: JokeDAO) : ViewModel() {
         coroutineScope.launch {
             val jokeSaved = db.isJokeSaved(currentJokeId)
             _isJokeExistInDb.value = jokeSaved != 0
-            Log.e("OverviewViewModel : ", jokeSaved.toString())
+//            Log.e("OverviewViewModel : ", jokeSaved.toString())
         }
     }
 }

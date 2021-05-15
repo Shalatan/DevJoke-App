@@ -13,14 +13,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.shalatan.devjoke.R
-import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
 import com.shalatan.devjoke.transformers.ZoomOutPageTransformer
 import java.io.ByteArrayOutputStream
@@ -42,9 +40,8 @@ class OverviewFragment : Fragment() {
     ): View {
 
         binding = FragmentOverviewBinding.inflate(inflater)
-        val dataSource = JokeDatabase.getInstance(requireContext()).jokeDAO
 
-        viewModelFactory = OverviewViewModelFactory(dataSource)
+        viewModelFactory = OverviewViewModelFactory(requireNotNull(activity).application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(OverviewViewModel::class.java)
 
         //set up view pager
@@ -52,7 +49,6 @@ class OverviewFragment : Fragment() {
         val jokeAdapter = JokeAdapter()
         jokesViewPager.adapter = jokeAdapter
         jokesViewPager.setPageTransformer(ZoomOutPageTransformer())
-//        setUpPosterViewPager(jokesViewPager)
 
         //observe jokesData and submit it to viewPager adapter
         viewModel.jokesData.observe(viewLifecycleOwner, {
@@ -75,7 +71,7 @@ class OverviewFragment : Fragment() {
         //observe isJokeExistInDb to check if current joke is already liked or not
         //it = true when joke is already liked
         viewModel.isJokeExistInDb.observe(viewLifecycleOwner, {
-            Log.e("OverviewFragment Joke Exist", it.toString())
+//            Log.e("OverviewFragment Joke Exist", it.toString())
             if (it) {
                 makeButtonDisLikeable()
             } else {
@@ -146,7 +142,7 @@ class OverviewFragment : Fragment() {
         val uri = getImageUri(requireContext(), bitmap)
         val intent = Intent(Intent.ACTION_SEND)
         intent.putExtra(Intent.EXTRA_STREAM, uri)
-        intent.putExtra(Intent.EXTRA_TEXT,shareText)
+        intent.putExtra(Intent.EXTRA_TEXT, shareText)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.type = "image/png"
         startActivity(intent)
