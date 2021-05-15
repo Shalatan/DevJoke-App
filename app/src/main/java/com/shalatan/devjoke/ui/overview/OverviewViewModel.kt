@@ -52,7 +52,7 @@ class OverviewViewModel(application: Application) : ViewModel() {
      */
     fun saveJoke(position: Int) {
         val joke = _jokesData.value?.get(position)
-        val savedJoke = SavedJoke(joke!!.jokeId, joke.jokeText, false, 0, 0)
+        val savedJoke = SavedJoke(joke!!.jokeId, joke.jokeText)
         coroutineScope.launch {
             db.insert(savedJoke)
         }
@@ -63,7 +63,7 @@ class OverviewViewModel(application: Application) : ViewModel() {
      */
     fun deleteJoke(position: Int) {
         val joke = _jokesData.value?.get(position)
-        val savedJoke = SavedJoke(joke!!.jokeId, joke.jokeText, false, 0, 0)
+        val savedJoke = SavedJoke(joke!!.jokeId, joke.jokeText)
         viewModelScope.launch {
             db.delete(savedJoke)
         }

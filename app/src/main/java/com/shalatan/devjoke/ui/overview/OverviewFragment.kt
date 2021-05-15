@@ -20,10 +20,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
-import com.shalatan.devjoke.transformers.ZoomOutPageTransformer
+import com.shalatan.devjoke.util.ZoomOutPageTransformer
 import java.io.ByteArrayOutputStream
 import java.util.*
 
+const val VIEW_PAGER_POSITION = "com.shalatan.devjoke.VIEW_PAGER_POSITION"
 
 class OverviewFragment : Fragment() {
 
@@ -31,8 +32,10 @@ class OverviewFragment : Fragment() {
         "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more such DevJokes and share your DevJokes/Puns with other devs"
     private lateinit var viewModelFactory: OverviewViewModelFactory
     private lateinit var viewModel: OverviewViewModel
+    private lateinit var jokesViewPager: ViewPager2
     private lateinit var binding: FragmentOverviewBinding
     private var isRedActive = false
+    private var viewPagerPosition = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,8 +47,7 @@ class OverviewFragment : Fragment() {
         viewModelFactory = OverviewViewModelFactory(requireNotNull(activity).application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(OverviewViewModel::class.java)
 
-        //set up view pager
-        val jokesViewPager = binding.jokesViewer
+        jokesViewPager = binding.jokesViewer
         val jokeAdapter = JokeAdapter()
         jokesViewPager.adapter = jokeAdapter
         jokesViewPager.setPageTransformer(ZoomOutPageTransformer())
@@ -53,6 +55,7 @@ class OverviewFragment : Fragment() {
         //observe jokesData and submit it to viewPager adapter
         viewModel.jokesData.observe(viewLifecycleOwner, {
             it.let(jokeAdapter::submitList)
+            scroll()
             Log.e("OverviewFragment : ", "Jokes Fetched")
         })
 
@@ -63,15 +66,14 @@ class OverviewFragment : Fragment() {
                 positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
+                viewPagerPosition = position
                 viewModel.isJokeSavedInDatabase(position)
                 makeButtonLikeable()
             }
         })
 
         //observe isJokeExistInDb to check if current joke is already liked or not
-        //it = true when joke is already liked
         viewModel.isJokeExistInDb.observe(viewLifecycleOwner, {
-//            Log.e("OverviewFragment Joke Exist", it.toString())
             if (it) {
                 makeButtonDisLikeable()
             } else {
@@ -111,6 +113,24 @@ class OverviewFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun scroll() {
+        val sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        viewPagerPosition = sharedPreferences.getInt(VIEW_PAGER_POSITION, 0)
+        Log.e("ENTER POSITION - ", viewPagerPosition.toString())
+        jokesViewPager.currentItem = viewPagerPosition
+
+    }
+
+    //save the current position of viewPager
+    override fun onPause() {
+        super.onPause()
+        val sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with(sharedPreferences.edit()) {
+            putInt(VIEW_PAGER_POSITION, viewPagerPosition)
+            apply()
+        }
     }
 
     /**

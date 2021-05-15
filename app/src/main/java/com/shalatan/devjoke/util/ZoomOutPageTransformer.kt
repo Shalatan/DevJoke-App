@@ -1,4 +1,4 @@
-package com.shalatan.devjoke.transformers
+package com.shalatan.devjoke.util
 
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2

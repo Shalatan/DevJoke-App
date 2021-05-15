@@ -12,17 +12,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.databinding.FragmentFavouriteJokeBinding
-import com.shalatan.devjoke.transformers.ZoomOutPageTransformer
-import com.shalatan.devjoke.ui.overview.OverviewViewModel
-import com.shalatan.devjoke.ui.overview.OverviewViewModelFactory
+import com.shalatan.devjoke.util.ZoomOutPageTransformer
 import java.io.ByteArrayOutputStream
 import java.util.*
 

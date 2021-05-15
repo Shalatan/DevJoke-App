@@ -7,8 +7,5 @@ import androidx.room.PrimaryKey
 data class SavedJoke(
     @PrimaryKey
     val jokeId: Int,
-    val jokeText: String,
-    val jokeSent: Boolean,
-    val jokeLiked: Int,
-    val jokeShared: Int
+    val jokeText: String
 )
