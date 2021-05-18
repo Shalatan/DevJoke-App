@@ -1,5 +1,6 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
     <style name="ThemeDevJoke" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
@@ -11,11 +12,8 @@
         <item name="colorOnSecondary">@color/black</item>
 
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/black</item>
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:windowSplashscreenContent">@drawable/splash_screen_background</item>
         <!-- Customize your theme here. -->
-    </style>
-
-    <style name="SplashScreenTheme" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash_screen_background</item>
     </style>
 </resources>

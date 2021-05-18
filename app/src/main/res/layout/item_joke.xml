@@ -30,21 +30,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:fontFamily="@font/patrick"
-                android:gravity="center"
+                android:gravity="center_vertical|center"
                 android:hint="A card has a container and an optional thumbnail, header text, secondary text, media, supporting text, buttons and icons"
+                android:padding="4dp"
                 android:text="@{joke.jokeText}"
                 android:textColor="@color/mid_emphasis_text"
                 android:textSize="32sp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="22dp"
+                android:layout_marginBottom="22dp"
+                android:text="@{@string/joke_id_text(Integer.toString(joke.jokeId-1000))}"
+                android:textColor="@color/high_emphasis_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
             <ImageView
+                android:background="@color/white"
                 android:id="@+id/devJokeLogo"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/app_logo"
+                android:src="@drawable/devjoke_logo"
                 app:layout_constraintBottom_toTopOf="@id/devJokeText"
                 app:layout_constraintEnd_toEndOf="@+id/devJokeText"
                 app:layout_constraintStart_toStartOf="@id/devJokeText" />
@@ -54,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="18dp"
-                android:layout_marginBottom="22dp"
+                android:layout_marginBottom="18dp"
                 android:text="DevJoke App"
                 android:textColor="@color/high_emphasis_text"
                 android:textSize="14sp"

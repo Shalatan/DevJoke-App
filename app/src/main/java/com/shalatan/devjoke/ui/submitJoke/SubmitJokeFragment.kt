@@ -14,7 +14,7 @@ import com.shalatan.devjoke.databinding.FragmentSubmitJokeBinding
 class SubmitJokeFragment : Fragment() {
 
     private lateinit var binding: FragmentSubmitJokeBinding
-    private var jokeNumber = 1000
+    private var jokeNumber = 1001
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,9 +22,7 @@ class SubmitJokeFragment : Fragment() {
     ): View {
 
         binding = FragmentSubmitJokeBinding.inflate(inflater)
-
         val db = Firebase.firestore
-
         binding.submitJoke.setOnClickListener {
             jokeNumber++
             val jokes = binding.postJokeEditText.text.toString()
@@ -34,6 +32,7 @@ class SubmitJokeFragment : Fragment() {
             }.addOnFailureListener {
                 Log.e("JOKE", "FAILED")
             }
+            binding.postJokeEditText.text = null
         }
 
         return binding.root

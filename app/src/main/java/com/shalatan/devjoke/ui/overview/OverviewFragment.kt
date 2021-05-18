@@ -24,6 +24,7 @@ import com.shalatan.devjoke.util.ZoomOutPageTransformer
 import java.io.ByteArrayOutputStream
 import java.util.*
 
+const val TAG = "OverviewFragment : "
 const val VIEW_PAGER_POSITION = "com.shalatan.devjoke.VIEW_PAGER_POSITION"
 
 class OverviewFragment : Fragment() {
@@ -111,16 +112,15 @@ class OverviewFragment : Fragment() {
         binding.addJokeButton.setOnClickListener {
             findNavController().navigate(OverviewFragmentDirections.actionOverviewFragmentToSubmitJokeFragment())
         }
-
         return binding.root
     }
 
+    //call this function wherever necessary
     private fun scroll() {
         val sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         viewPagerPosition = sharedPreferences.getInt(VIEW_PAGER_POSITION, 0)
-        Log.e("ENTER POSITION - ", viewPagerPosition.toString())
+        Log.e(TAG + "Enter Position - ", viewPagerPosition.toString())
         jokesViewPager.currentItem = viewPagerPosition
-
     }
 
     //save the current position of viewPager
@@ -131,6 +131,7 @@ class OverviewFragment : Fragment() {
             putInt(VIEW_PAGER_POSITION, viewPagerPosition)
             apply()
         }
+        Log.e(TAG + "Exit Position - ", viewPagerPosition.toString())
     }
 
     /**
@@ -179,31 +180,4 @@ class OverviewFragment : Fragment() {
         )
         return Uri.parse(path)
     }
-
-
-//    /**
-//     * function to make view pager view multiple items
-//     */
-//    private fun setUpPosterViewPager(jokeViewPager: ViewPager2) {
-//        with(jokeViewPager) {
-//            clipToPadding = false
-//            clipChildren = false
-//            offscreenPageLimit = 3
-//        }
-//        val pageMarginPx = 20 * resources.displayMetrics.density
-//        val offsetPx = 15 * resources.displayMetrics.density
-//        jokeViewPager.setPageTransformer { page, position ->
-//            val viewPager = page.parent.parent as ViewPager2
-//            val offset = position * -(2 * offsetPx + pageMarginPx)
-//            if (viewPager.orientation == ViewPager2.ORIENTATION_HORIZONTAL) {
-//                if (ViewCompat.getLayoutDirection(viewPager) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-//                    page.translationX = -offset
-//                } else {
-//                    page.translationX = offset
-//                }
-//            } else {
-//                page.translationY = offset
-//            }
-//        }
-//    }
 }
