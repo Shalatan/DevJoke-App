@@ -77,7 +77,6 @@ class OverviewViewModel(application: Application) : ViewModel() {
         coroutineScope.launch {
             val jokeSaved = db.isJokeSaved(currentJokeId)
             _isJokeExistInDb.value = jokeSaved != 0
-//            Log.e("OverviewViewModel : ", jokeSaved.toString())
         }
     }
 }

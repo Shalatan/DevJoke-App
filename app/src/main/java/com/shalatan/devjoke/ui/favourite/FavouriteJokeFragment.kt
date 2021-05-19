@@ -6,12 +6,15 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -52,7 +55,16 @@ class FavouriteJokeFragment : Fragment() {
         //observe jokesData and submit it to viewPager adapter
         viewModel.favouriteJokes.observe(viewLifecycleOwner, {
             it.let(jokeAdapter::submitList)
-            Log.e("OverviewFragment : ", "Jokes Fetched")
+            if (it.isEmpty()) {
+                binding.shareButton.isClickable = false
+                binding.likeButton.isClickable = false
+                binding.shareButton.isPressed = true
+                binding.likeButton.isPressed = true
+            } else {
+                binding.likeButton.isClickable = true
+                binding.shareButton.isClickable = true
+            }
+            Log.e("FavouriteJokeFragment Saved Jokes : ", it?.size.toString())
         })
 
         //share carView as image
@@ -63,6 +75,8 @@ class FavouriteJokeFragment : Fragment() {
         binding.likeButton.setOnClickListener {
             val position = jokesViewPager.currentItem
             viewModel.deleteSavedJoke(position)
+            Toast.makeText(requireContext(), "Joke Removed from Favourites", Toast.LENGTH_SHORT)
+                .show()
         }
 
         binding.savedListButton.setOnClickListener {
@@ -103,30 +117,4 @@ class FavouriteJokeFragment : Fragment() {
         return Uri.parse(path)
     }
 
-
-//    /**
-//     * function to make view pager view multiple items
-//     */
-//    private fun setUpPosterViewPager(jokeViewPager: ViewPager2) {
-//        with(jokeViewPager) {
-//            clipToPadding = false
-//            clipChildren = false
-//            offscreenPageLimit = 3
-//        }
-//        val pageMarginPx = 20 * resources.displayMetrics.density
-//        val offsetPx = 15 * resources.displayMetrics.density
-//        jokeViewPager.setPageTransformer { page, position ->
-//            val viewPager = page.parent.parent as ViewPager2
-//            val offset = position * -(2 * offsetPx + pageMarginPx)
-//            if (viewPager.orientation == ViewPager2.ORIENTATION_HORIZONTAL) {
-//                if (ViewCompat.getLayoutDirection(viewPager) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-//                    page.translationX = -offset
-//                } else {
-//                    page.translationX = offset
-//                }
-//            } else {
-//                page.translationY = offset
-//            }
-//        }
-//    }
 }
