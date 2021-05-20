@@ -14,15 +14,25 @@
         android:id="@+id/background_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black">
+        android:background="@color/n_background_color">
 
-        <ImageButton
+        <!--        <ImageButton-->
+        <!--            android:id="@+id/add_joke_button"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="32dp"-->
+        <!--            android:layout_marginEnd="32dp"-->
+        <!--            android:background="@drawable/custom_plus_button"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <include
             android:id="@+id/add_joke_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            layout="@layout/neu_buttons"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
-            android:background="@drawable/custom_plus_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,12 +44,23 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/item_joke" />
 
-        <ImageButton
+        <!--        <ImageButton-->
+        <!--            android:id="@+id/saved_list_button"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginBottom="48dp"-->
+        <!--            android:background="@drawable/custom_list_button"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toStartOf="@id/like_button"-->
+        <!--            app:layout_constraintHorizontal_chainStyle="spread"-->
+        <!--            app:layout_constraintStart_toStartOf="parent" />-->
+
+        <include
             android:id="@+id/saved_list_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            layout="@layout/neu_buttons"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_marginBottom="48dp"
-            android:background="@drawable/custom_list_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/like_button"
             app:layout_constraintHorizontal_chainStyle="spread"

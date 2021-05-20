@@ -105,11 +105,11 @@ class OverviewFragment : Fragment() {
             shareCardView(binding.jokesViewer.children.single())
         }
 
-        binding.savedListButton.setOnClickListener {
+        binding.savedListButton.button.setOnClickListener {
             findNavController().navigate(OverviewFragmentDirections.actionOverviewFragmentToFavouriteJokeFragment())
         }
 
-        binding.addJokeButton.setOnClickListener {
+        binding.addJokeButton.button.setOnClickListener {
             findNavController().navigate(OverviewFragmentDirections.actionOverviewFragmentToSubmitJokeFragment())
         }
         return binding.root

@@ -10,69 +10,112 @@
             type="com.shalatan.devjoke.data.Joke" />
     </data>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="36dp"
         android:layout_marginEnd="36dp"
-        android:elevation="8dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="24dp"
-        app:strokeWidth="1dp">
-        <!--        app:cardViewColor="@{joke.jokeId}"-->
+        android:fadingEdgeLength="8dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card"
             android:layout_width="match_parent"
-            android:layout_height="400dp">
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/n_background_color">
 
-            <TextView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="16dp"
-                android:fontFamily="@font/patrick"
-                android:gravity="center_vertical|center"
-                android:hint="A card has a container and an optional thumbnail, header text, secondary text, media, supporting text, buttons and icons"
-                android:padding="4dp"
-                android:text="@{joke.jokeText}"
-                android:textColor="@color/mid_emphasis_text"
-                android:textSize="32sp" />
+                android:layout_height="400dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="22dp"
-                android:layout_marginBottom="22dp"
-                android:text="@{@string/joke_id_text(Integer.toString(joke.jokeId-1000))}"
-                android:textColor="@color/high_emphasis_text"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="@font/patrick"
+                    android:gravity="center_vertical|center"
+                    android:hint="A card has a container and an optional thumbnail, header text, secondary text, media, supporting text, buttons and icons"
+                    android:padding="4dp"
+                    android:text="@{joke.jokeText}"
+                    android:textColor="@color/mid_emphasis_text"
+                    android:textSize="32sp" />
 
-            <ImageView
-                android:background="@color/white"
-                android:id="@+id/devJokeLogo"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/devjoke_logo"
-                app:layout_constraintBottom_toTopOf="@id/devJokeText"
-                app:layout_constraintEnd_toEndOf="@+id/devJokeText"
-                app:layout_constraintStart_toStartOf="@id/devJokeText" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginBottom="22dp"
+                    android:text="@{@string/joke_id_text(Integer.toString(joke.jokeId-1000))}"
+                    android:textColor="@color/high_emphasis_text"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-            <TextView
-                android:id="@+id/devJokeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="18dp"
-                android:layout_marginBottom="18dp"
-                android:text="DevJoke App"
-                android:textColor="@color/high_emphasis_text"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                <ImageView
+                    android:id="@+id/devJokeLogo"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@color/white"
+                    android:src="@drawable/devjoke_logo"
+                    app:layout_constraintBottom_toTopOf="@id/devJokeText"
+                    app:layout_constraintEnd_toEndOf="@+id/devJokeText"
+                    app:layout_constraintStart_toStartOf="@id/devJokeText" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:id="@+id/devJokeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="18dp"
+                    android:layout_marginBottom="18dp"
+                    android:text="DevJoke App"
+                    android:textColor="@color/high_emphasis_text"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginStart="4.5dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/shadow_white_horizontal"
+            app:layout_constraintBottom_toTopOf="@id/card" />
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4.5dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/shadow_white_vertical"
+            app:layout_constraintEnd_toStartOf="@id/card" />
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/shadow_black_vertical"
+            android:forceHasOverlappingRendering="false"
+            app:layout_constraintStart_toEndOf="@id/card" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/shadow_black_horizontal"
+            android:elevation="8dp"
+            android:forceHasOverlappingRendering="false"
+            app:layout_constraintCircleRadius="8dp"
+            app:layout_constraintTop_toBottomOf="@id/card" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

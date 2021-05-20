@@ -13,4 +13,13 @@
     <color name="low_emphasis_text">#61000000</color>
 
     <color name="pressed_button">#4A4A4A</color>
+
+    //neumorphism
+    <color name="n_background_color">#EEF0F5</color>
+
+    <color name="n_black_shadow_start">#80404040</color>
+    <color name="n_black_shadow_end">#00000000</color>
+    <color name="n_white_shadow_start">#FFFF</color>
+    <color name="n_white_shadow_end">#00FFFFFF</color>
+
 </resources>
