@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.shalatan.devjoke.R
@@ -110,7 +111,10 @@ class OverviewFragment : Fragment() {
         }
 
         binding.addJokeButton.setOnClickListener {
-            findNavController().navigate(OverviewFragmentDirections.actionOverviewFragmentToSubmitJokeFragment())
+            val extras = FragmentNavigatorExtras(binding.jokesViewer to "card_transition")
+            val directions =
+                OverviewFragmentDirections.actionOverviewFragmentToSubmitJokeFragment()
+            findNavController().navigate(directions, extras)
         }
         return binding.root
     }
@@ -131,7 +135,7 @@ class OverviewFragment : Fragment() {
             putInt(VIEW_PAGER_POSITION, viewPagerPosition)
             apply()
         }
-        Log.e(TAG + "Exit Position - ", viewPagerPosition.toString())
+        Log.e(TAG + "Exit Position - ", sharedPreferences.getInt(VIEW_PAGER_POSITION, 0).toString())
     }
 
     /**

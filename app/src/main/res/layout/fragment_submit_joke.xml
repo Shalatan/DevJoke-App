@@ -11,8 +11,7 @@
             android:layout_width="300dp"
             android:layout_height="360dp"
             android:layout_marginTop="32dp"
-            android:elevation="8dp"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
+            android:transitionName="card_transition"
             app:cardCornerRadius="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +19,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/cardBackgroundColor">
 
                 <TextView
                     android:id="@+id/example_card_text_view"
@@ -34,7 +34,7 @@
                     android:fontFamily="@font/patrick"
                     android:gravity="center_vertical|center"
                     android:padding="4dp"
-                    android:text="@string/notice_text"
+                    android:text="@string/card_locked_text"
                     android:textSize="22sp" />
 
                 <TextView
@@ -77,6 +77,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="36dp"
             android:enabled="false"
+            android:hint="Type a Cool DevJoke Here.."
             android:maxLines="3"
             android:minLines="2"
             app:layout_constraintTop_toBottomOf="@+id/example_card_view" />
@@ -87,10 +88,32 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:enabled="false"
-            android:text="@string/hello_blank_fragment"
+            android:text="POST JOKE"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/post_joke_edit_text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="start"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/notice_text"
+            android:textColor="@color/dark_green"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/accept_button" />
+
+        <Button
+            android:id="@+id/accept_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:text="Accept"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

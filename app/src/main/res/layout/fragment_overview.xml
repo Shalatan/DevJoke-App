@@ -29,6 +29,9 @@
             android:id="@+id/jokes_viewer"
             android:layout_width="match_parent"
             android:layout_height="400dp"
+            android:background="@color/backgroundColor"
+            android:backgroundTint="@color/backgroundColor"
+            android:transitionName="card_transition"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/item_joke" />
@@ -67,6 +70,4 @@
             app:layout_constraintStart_toEndOf="@id/like_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </layout>
