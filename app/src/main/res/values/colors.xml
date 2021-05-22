@@ -8,9 +8,14 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="dark_green">#356859</color>
+    <color name="light_green">#37966F</color>
+    <color name="backgroundColor">#FFFBE6</color>
+    <color name="cardBackgroundColor">#ABB9E4C9</color>
+
     <color name="high_emphasis_text">#DE000000</color>
     <color name="mid_emphasis_text">#99000000</color>
     <color name="low_emphasis_text">#61000000</color>
 
-    <color name="pressed_button">#4A4A4A</color>
+    <color name="pressed_button">#ABB9E4C9</color>
 </resources>
