@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.transition.MaterialSharedAxis
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
 import com.shalatan.devjoke.util.ZoomOutPageTransformer
@@ -107,6 +108,8 @@ class OverviewFragment : Fragment() {
         }
 
         binding.savedListButton.setOnClickListener {
+//            exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+//            reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z,false)
             findNavController().navigate(OverviewFragmentDirections.actionOverviewFragmentToFavouriteJokeFragment())
         }
 
@@ -124,7 +127,8 @@ class OverviewFragment : Fragment() {
         val sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         viewPagerPosition = sharedPreferences.getInt(VIEW_PAGER_POSITION, 0)
         Log.e(TAG + "Enter Position - ", viewPagerPosition.toString())
-        jokesViewPager.currentItem = viewPagerPosition
+//        jokesViewPager.currentItem = viewPagerPosition
+        jokesViewPager.setCurrentItem(viewPagerPosition,false)
     }
 
     //save the current position of viewPager

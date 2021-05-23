@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -69,26 +70,33 @@ class SubmitJokeFragment : Fragment() {
 
         binding.acceptButton.setOnClickListener {
             if (!isConditionAccepted) {
-                isConditionAccepted = true
-                val oa1 = ObjectAnimator.ofFloat(cardView, "scaleX", 1f, 0f)
-                val oa2 = ObjectAnimator.ofFloat(cardView, "scaleX", 0f, 1f)
-                oa1.interpolator = DecelerateInterpolator()
-                oa2.interpolator = AccelerateDecelerateInterpolator()
-                oa1.addListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        super.onAnimationEnd(animation)
-                        cardView.elevation = 8f
-                        binding.acceptButton.isEnabled = false
-                        binding.postJokeButton.isEnabled = true
-                        binding.postJokeEditText.isEnabled = true
-                        binding.exampleCardTextView.text = null
-                        oa2.start()
-                    }
-                })
-                oa1.start()
+                flipCardView(cardView)
             }
         }
         return binding.root
+    }
+
+    /**
+     * flip card view
+     */
+    private fun flipCardView(cardView: MaterialCardView) {
+        isConditionAccepted = true
+        val oa1 = ObjectAnimator.ofFloat(cardView, "scaleX", 1f, 0f)
+        val oa2 = ObjectAnimator.ofFloat(cardView, "scaleX", 0f, 1f)
+        oa1.interpolator = DecelerateInterpolator()
+        oa2.interpolator = AccelerateDecelerateInterpolator()
+        oa1.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                super.onAnimationEnd(animation)
+                cardView.elevation = 8f
+                binding.acceptButton.isEnabled = false
+                binding.postJokeButton.isEnabled = true
+                binding.postJokeEditText.isEnabled = true
+                binding.exampleCardTextView.text = null
+                oa2.start()
+            }
+        })
+        oa1.start()
     }
 
     /**

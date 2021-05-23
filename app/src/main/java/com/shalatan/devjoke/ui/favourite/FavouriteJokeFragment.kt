@@ -19,6 +19,7 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.transition.MaterialSharedAxis
 import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.databinding.FragmentFavouriteJokeBinding
 import com.shalatan.devjoke.util.ZoomOutPageTransformer
@@ -40,6 +41,10 @@ class FavouriteJokeFragment : Fragment() {
     ): View {
 
         binding = FragmentFavouriteJokeBinding.inflate(inflater)
+
+//        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+//        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+
         val dataSource = JokeDatabase.getInstance(requireContext()).jokeDAO
 
         viewModelFactory = FavouriteJokeViewModelFactory(dataSource)

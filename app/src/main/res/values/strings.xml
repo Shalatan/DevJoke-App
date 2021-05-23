@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DevJoke</string>
+    <string name="app_name">DevJokes</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_text">A card has a container and an optional thumbnail, header text, secondary text.</string>
