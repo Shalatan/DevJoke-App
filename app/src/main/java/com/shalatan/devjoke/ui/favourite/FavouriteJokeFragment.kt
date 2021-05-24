@@ -1,36 +1,26 @@
 package com.shalatan.devjoke.ui.favourite
 
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.transition.MaterialSharedAxis
 import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.databinding.FragmentFavouriteJokeBinding
 import com.shalatan.devjoke.util.ZoomOutPageTransformer
-import java.io.ByteArrayOutputStream
-import java.util.*
+import com.shalatan.devjoke.util.shareView
 
+const val shareText =
+    "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more such DevJokes and share your DevJokes/Puns with other devs"
 
 class FavouriteJokeFragment : Fragment() {
 
-    private val shareText =
-        "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more such DevJokes and share your DevJokes/Puns with other devs"
     private lateinit var viewModelFactory: FavouriteJokeViewModelFactory
     private lateinit var viewModel: FavouriteJokeViewModel
     private lateinit var binding: FragmentFavouriteJokeBinding
@@ -92,34 +82,16 @@ class FavouriteJokeFragment : Fragment() {
     }
 
     /**
-     * function to get bitmap from viewPager and share ias image
+     * function to create a bitmap of the view and save it in internal storage
      */
     private fun shareCardView(view: View) {
-        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        val bgDrawable = view.background
-        if (bgDrawable != null) bgDrawable.draw(canvas) else canvas.drawColor(Color.WHITE)
-        view.draw(canvas)
-
-        val uri = getImageUri(requireContext(), bitmap)
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.putExtra(Intent.EXTRA_STREAM, uri)
-        intent.putExtra(Intent.EXTRA_TEXT, shareText)
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        intent.type = "image/png"
-        startActivity(intent)
-    }
-
-    /**
-     * function to convert the passed bitmap to Uri and return it
-     */
-    private fun getImageUri(inContext: Context, bitmap: Bitmap): Uri? {
-        val bytes = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        val path = MediaStore.Images.Media.insertImage(
-            inContext.contentResolver, bitmap, "IMG_" + Calendar.getInstance().time, null
-        )
-        return Uri.parse(path)
+        val uri = shareView(requireContext(), view)
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+        shareIntent.putExtra(Intent.EXTRA_TEXT, com.shalatan.devjoke.ui.favourite.shareText)
+        shareIntent.type = "image/png"
+        startActivity(shareIntent)
     }
 
 }

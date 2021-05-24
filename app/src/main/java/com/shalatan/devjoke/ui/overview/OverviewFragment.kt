@@ -4,35 +4,38 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.transition.MaterialSharedAxis
+import com.google.firebase.installations.Utils
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
 import com.shalatan.devjoke.util.ZoomOutPageTransformer
-import java.io.ByteArrayOutputStream
-import java.util.*
+import com.shalatan.devjoke.util.shareView
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 const val TAG = "OverviewFragment : "
 const val VIEW_PAGER_POSITION = "com.shalatan.devjoke.VIEW_PAGER_POSITION"
+const val shareText =
+    "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more such DevJokes and share your DevJokes/Puns with other devs"
+
 
 class OverviewFragment : Fragment() {
 
-    private val shareText =
-        "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more such DevJokes and share your DevJokes/Puns with other devs"
     private lateinit var viewModelFactory: OverviewViewModelFactory
     private lateinit var viewModel: OverviewViewModel
     private lateinit var jokesViewPager: ViewPager2
@@ -59,7 +62,7 @@ class OverviewFragment : Fragment() {
         viewModel.jokesData.observe(viewLifecycleOwner, {
             it.let(jokeAdapter::submitList)
             scroll()
-            Log.e("OverviewFragment : ", "Jokes Fetched")
+            Log.e(TAG, "Jokes Fetched")
         })
 
         //when scrolled, check if new joke is already liked by the user
@@ -124,17 +127,18 @@ class OverviewFragment : Fragment() {
 
     //call this function wherever necessary
     private fun scroll() {
-        val sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        val sharedPreferences =
+            activity?.getSharedPreferences(VIEW_PAGER_POSITION, Context.MODE_PRIVATE) ?: return
         viewPagerPosition = sharedPreferences.getInt(VIEW_PAGER_POSITION, 0)
         Log.e(TAG + "Enter Position - ", viewPagerPosition.toString())
-//        jokesViewPager.currentItem = viewPagerPosition
-        jokesViewPager.setCurrentItem(viewPagerPosition,false)
+        jokesViewPager.setCurrentItem(viewPagerPosition, false)
     }
 
     //save the current position of viewPager
     override fun onPause() {
         super.onPause()
-        val sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        val sharedPreferences =
+            activity?.getSharedPreferences(VIEW_PAGER_POSITION, Context.MODE_PRIVATE) ?: return
         with(sharedPreferences.edit()) {
             putInt(VIEW_PAGER_POSITION, viewPagerPosition)
             apply()
@@ -159,33 +163,15 @@ class OverviewFragment : Fragment() {
     }
 
     /**
-     * function to get bitmap from viewPager and share ias image
+     * function to create a bitmap of the view and save it in internal storage
      */
     private fun shareCardView(view: View) {
-        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        val bgDrawable = view.background
-        if (bgDrawable != null) bgDrawable.draw(canvas) else canvas.drawColor(Color.WHITE)
-        view.draw(canvas)
-
-        val uri = getImageUri(requireContext(), bitmap)
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.putExtra(Intent.EXTRA_STREAM, uri)
-        intent.putExtra(Intent.EXTRA_TEXT, shareText)
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        intent.type = "image/png"
-        startActivity(intent)
-    }
-
-    /**
-     * function to convert the passed bitmap to Uri and return it
-     */
-    private fun getImageUri(inContext: Context, bitmap: Bitmap): Uri? {
-        val bytes = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        val path = MediaStore.Images.Media.insertImage(
-            inContext.contentResolver, bitmap, "IMG_" + Calendar.getInstance().time, null
-        )
-        return Uri.parse(path)
+        val uri = shareView(requireContext(), view)
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+        shareIntent.putExtra(Intent.EXTRA_TEXT, com.shalatan.devjoke.ui.favourite.shareText)
+        shareIntent.type = "image/png"
+        startActivity(shareIntent)
     }
 }

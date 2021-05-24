@@ -13,12 +13,11 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.shalatan.devjoke.data.Joke
@@ -29,6 +28,7 @@ class SubmitJokeFragment : Fragment() {
     private lateinit var binding: FragmentSubmitJokeBinding
     private var jokeNumber = 1001
     private var isConditionAccepted = false
+    private var isJokePostingActive = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,24 +42,38 @@ class SubmitJokeFragment : Fragment() {
 
         binding = FragmentSubmitJokeBinding.inflate(inflater)
         val db = Firebase.firestore
+
         binding.postJokeButton.setOnClickListener {
-            jokeNumber++
-            val jokeText = binding.postJokeEditText.text.toString()
-            val joke = Joke(jokeNumber, jokeText)
-            db.collection("jokes").document(jokeNumber.toString()).set(joke).addOnSuccessListener {
-                Log.e("JOKE UPLOADING : ", "SUCCESSFUL")
-                Toast.makeText(requireContext(), "Thank You for submitting", Toast.LENGTH_SHORT)
-                    .show()
-            }.addOnFailureListener {
-                Log.e("JOKE UPLOADING : ", "FAILED")
-                Toast.makeText(
-                    requireContext(),
-                    "Ooops !! There was some error",
-                    Toast.LENGTH_SHORT
-                ).show()
+            if (isJokePostingActive) {
+                jokeNumber++
+                val jokeText = binding.postJokeEditText.text.toString()
+                val joke = Joke(jokeNumber, jokeText)
+                db.collection("jokes").document(jokeNumber.toString()).set(joke)
+                    .addOnSuccessListener {
+                        Log.e("JOKE UPLOADING : ", "SUCCESSFUL")
+                        Toast.makeText(
+                            requireContext(),
+                            "Thank You for submitting",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }.addOnFailureListener {
+                        Log.e("JOKE UPLOADING : ", "FAILED")
+                        Toast.makeText(
+                            requireContext(),
+                            "Ooops !! There was some error",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                binding.triggerMotionSceneButton.performClick()
+                binding.postJokeEditText.text = null
+                binding.postJokeEditText.hideKeyboard()
+                makeButtonPostAgain(binding.postJokeButton)
+            } else {
+                binding.triggerMotionSceneButton.performClick()
+                makeButtonPostJoke(binding.postJokeButton)
             }
-            binding.postJokeEditText.text = null
-            binding.postJokeEditText.hideKeyboard()
+//            binding.thankYouTextView.visibility = View.VISIBLE
         }
 
         binding.postJokeEditText.doOnTextChanged { newJoke, start, before, count ->
@@ -72,6 +86,7 @@ class SubmitJokeFragment : Fragment() {
             if (!isConditionAccepted) {
                 flipCardView(cardView)
             }
+            binding.exampleCardTextView.textSize = 32f
         }
         return binding.root
     }
@@ -102,9 +117,21 @@ class SubmitJokeFragment : Fragment() {
     /**
      * hide soft-keyboard
      */
-    fun View.hideKeyboard() {
+    private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+    private fun makeButtonPostJoke(postJokeButton: Button) {
+        postJokeButton.text = "Post Joke"
+        binding.postJokeEditText.isEnabled = true
+        isJokePostingActive = true
+    }
+
+    private fun makeButtonPostAgain(postJokeButton: Button) {
+        postJokeButton.text = "Post New Joke"
+        binding.postJokeEditText.isEnabled = false
+        isJokePostingActive = false
     }
 
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="800"
+        motion:motionInterpolator="cubic-bezier(.24,.85,.84,.12)">
+        <OnClick
+            motion:clickAction="toggle"
+            motion:targetId="@+id/trigger_motion_scene_button" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/example_card_view"
+            android:layout_width="300dp"
+            android:layout_height="360dp"
+            android:layout_marginTop="32dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/example_card_view"
+            android:layout_width="300dp"
+            android:layout_height="360dp"
+            android:layout_marginTop="32dp"
+            android:translationY="-400dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent">
+            <Transform android:rotation="-90" />
+        </Constraint>
+    </ConstraintSet>
+</MotionScene>
