@@ -2,31 +2,22 @@ package com.shalatan.devjoke.ui.overview
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import com.google.firebase.installations.Utils
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
 import com.shalatan.devjoke.util.ZoomOutPageTransformer
 import com.shalatan.devjoke.util.shareView
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 const val TAG = "OverviewFragment : "
 const val VIEW_PAGER_POSITION = "com.shalatan.devjoke.VIEW_PAGER_POSITION"
