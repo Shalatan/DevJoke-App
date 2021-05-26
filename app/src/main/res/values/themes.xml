@@ -15,6 +15,10 @@
         <item name="android:windowBackground">@color/backgroundColor</item>
 
         <!-- Theme -->
+        <item name="high_emphasis_texts">@color/dark_green</item>
+        <item name="mid_emphasis_texts">@color/light_green</item>
+        <item name="card_background_color">@color/cardBackgroundColor</item>
+        <item name="app_background_color">@color/backgroundColor</item>
 
     </style>
 

@@ -1,6 +1,7 @@
 package com.shalatan.devjoke.ui.favourite
 
 import android.content.Intent
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.shalatan.devjoke.R
 import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.databinding.FragmentFavouriteJokeBinding
 import com.shalatan.devjoke.util.ZoomOutPageTransformer
@@ -24,6 +26,7 @@ class FavouriteJokeFragment : Fragment() {
     private lateinit var viewModelFactory: FavouriteJokeViewModelFactory
     private lateinit var viewModel: FavouriteJokeViewModel
     private lateinit var binding: FragmentFavouriteJokeBinding
+    private lateinit var favouriteAnimation: AnimationDrawable
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +43,12 @@ class FavouriteJokeFragment : Fragment() {
         viewModelFactory = FavouriteJokeViewModelFactory(dataSource)
         viewModel =
             ViewModelProvider(this, viewModelFactory).get(FavouriteJokeViewModel::class.java)
+
+//        val constraintLayout = binding.favouriteJokeFragmentConstraintLayout.apply {
+//            setBackgroundResource(R.drawable.favourite_fragment_animation)
+//            favouriteAnimation = background as AnimationDrawable
+//        }
+//        favouriteAnimation.start()
 
         //set up view pager
         val jokesViewPager = binding.jokesViewer

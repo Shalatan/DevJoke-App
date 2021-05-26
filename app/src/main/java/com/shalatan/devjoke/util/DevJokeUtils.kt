@@ -21,7 +21,7 @@ fun shareView(context: Context, view: View): Uri? {
     if (bgDrawable != null)
         bgDrawable.draw(canvas)
     else
-        canvas.drawColor(ContextCompat.getColor(context, R.color.cardBackgroundColor))
+        canvas.drawColor(ContextCompat.getColor(context, R.color.white))
     view.draw(canvas)
 
     try {
