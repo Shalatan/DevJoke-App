@@ -12,6 +12,7 @@
     <color name="light_green">#37966F</color>
     <color name="backgroundColor">#FFFBE6</color>
     <color name="cardBackgroundColor">#ABB9E4C9</color>
+    <color name="backgroundColorDark">#121212</color>
 
     <color name="high_emphasis_text">#DE000000</color>
     <color name="mid_emphasis_text">#99000000</color>

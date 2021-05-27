@@ -60,11 +60,15 @@ class FavouriteJokeFragment : Fragment() {
         viewModel.favouriteJokes.observe(viewLifecycleOwner, {
             it.let(jokeAdapter::submitList)
             if (it.isEmpty()) {
+                binding.jokesViewer.visibility = View.GONE
+                binding.emptyImage.visibility = View.VISIBLE
                 binding.shareButton.isClickable = false
                 binding.likeButton.isClickable = false
                 binding.shareButton.isPressed = true
                 binding.likeButton.isPressed = true
             } else {
+                binding.jokesViewer.visibility = View.VISIBLE
+                binding.emptyImage.visibility = View.GONE
                 binding.likeButton.isClickable = true
                 binding.shareButton.isClickable = true
             }
