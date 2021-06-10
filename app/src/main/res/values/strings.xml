@@ -6,7 +6,7 @@
     <string name="scroll_to_new_joke"><u>Scroll to new Joke</u></string>
 
     <string name="joke_id_text">#%s</string>
-    <string name="notice_text">Rule :\n1. Do only post DevJokes.\n2. Do not use any vulgar or abusive words and keep this platform clean\n3. Joke would be pushed into main thread only after screening of unaccepted words or duplication.</string>
+    <string name="notice_text">Rule :\n1. PLease only post DevJokes.\n2. Do not use any abusive words\n3. Joke would be pushed into main thread only after screening of unaccepted words or duplication.</string>
     <string name="card_locked_text">Locked.. 🔒\n<u>Accept to activate the Card</u></string>
     <string name="thank_you_text">Thank You For Contributing\nHope your startup becomes Unicorn ;-)</string>
 </resources>

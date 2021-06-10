@@ -26,7 +26,7 @@ import com.shalatan.devjoke.databinding.FragmentSubmitJokeBinding
 class SubmitJokeFragment : Fragment() {
 
     private lateinit var binding: FragmentSubmitJokeBinding
-    private var jokeNumber = 1001
+    private var jokeNumber = 1025
     private var isConditionAccepted = false
     private var isJokePostingActive = true
 
@@ -73,7 +73,6 @@ class SubmitJokeFragment : Fragment() {
                 binding.triggerMotionSceneButton.performClick()
                 makeButtonPostJoke(binding.postJokeButton)
             }
-//            binding.thankYouTextView.visibility = View.VISIBLE
         }
 
         binding.postJokeEditText.doOnTextChanged { newJoke, start, before, count ->
