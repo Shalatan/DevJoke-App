@@ -21,12 +21,12 @@ import com.google.android.material.card.MaterialCardView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.shalatan.devjoke.data.Joke
+import com.shalatan.devjoke.data.SubmittedJoke
 import com.shalatan.devjoke.databinding.FragmentSubmitJokeBinding
 
 class SubmitJokeFragment : Fragment() {
 
     private lateinit var binding: FragmentSubmitJokeBinding
-    private var jokeNumber = 1025
     private var isConditionAccepted = false
     private var isJokePostingActive = true
 
@@ -45,10 +45,9 @@ class SubmitJokeFragment : Fragment() {
 
         binding.postJokeButton.setOnClickListener {
             if (isJokePostingActive) {
-                jokeNumber++
                 val jokeText = binding.postJokeEditText.text.toString()
-                val joke = Joke(jokeNumber, jokeText)
-                db.collection("jokes").document(jokeNumber.toString()).set(joke)
+                val submittedJoke = SubmittedJoke(jokeText)
+                db.collection("submittedJokes").add(submittedJoke)
                     .addOnSuccessListener {
                         Log.e("JOKE UPLOADING : ", "SUCCESSFUL")
                         Toast.makeText(
