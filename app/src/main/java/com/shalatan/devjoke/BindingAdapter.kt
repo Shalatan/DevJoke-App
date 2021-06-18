@@ -18,6 +18,6 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<Joke>) {
 fun changeCardViewColor(cardView: MaterialCardView, jokeId: Int) {
     val rnd = Random()
     val color: Int = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
-    cardView.setStrokeColor(color)
+    cardView.strokeColor = color
 }
 

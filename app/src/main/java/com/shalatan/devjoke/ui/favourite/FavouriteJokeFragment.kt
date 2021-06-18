@@ -7,11 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.database.JokeDatabase
 import com.shalatan.devjoke.databinding.FragmentFavouriteJokeBinding
@@ -19,7 +19,7 @@ import com.shalatan.devjoke.util.ZoomOutPageTransformer
 import com.shalatan.devjoke.util.shareView
 
 const val shareText =
-    "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more such DevJokes and share your DevJokes/Puns with other devs"
+    "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more DevJokes and share your DevJokes/Puns with other devs"
 
 class FavouriteJokeFragment : Fragment() {
 
@@ -83,7 +83,8 @@ class FavouriteJokeFragment : Fragment() {
         binding.likeButton.setOnClickListener {
             val position = jokesViewPager.currentItem
             viewModel.deleteSavedJoke(position)
-            Toast.makeText(requireContext(), "Joke Removed from Favourites", Toast.LENGTH_SHORT)
+            Snackbar.make(it, "Joke Removed From Favourites", Snackbar.LENGTH_SHORT)
+                .setBackgroundTint(resources.getColor(R.color.dark_green))
                 .show()
         }
 
@@ -102,7 +103,7 @@ class FavouriteJokeFragment : Fragment() {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-        shareIntent.putExtra(Intent.EXTRA_TEXT, com.shalatan.devjoke.ui.favourite.shareText)
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
         shareIntent.type = "image/png"
         startActivity(shareIntent)
     }

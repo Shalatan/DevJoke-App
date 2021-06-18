@@ -14,13 +14,13 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.shalatan.devjoke.data.Joke
+import com.shalatan.devjoke.R
 import com.shalatan.devjoke.data.SubmittedJoke
 import com.shalatan.devjoke.databinding.FragmentSubmitJokeBinding
 
@@ -43,26 +43,29 @@ class SubmitJokeFragment : Fragment() {
         binding = FragmentSubmitJokeBinding.inflate(inflater)
         val db = Firebase.firestore
 
-        binding.postJokeButton.setOnClickListener {
+        binding.postJokeButton.setOnClickListener { view ->
             if (isJokePostingActive) {
                 val jokeText = binding.postJokeEditText.text.toString()
                 val submittedJoke = SubmittedJoke(jokeText)
                 db.collection("submittedJokes").add(submittedJoke)
                     .addOnSuccessListener {
-                        Log.e("JOKE UPLOADING : ", "SUCCESSFUL")
-                        Toast.makeText(
-                            requireContext(),
-                            "Thank You for submitting",
-                            Toast.LENGTH_SHORT
+                        Log.d("JOKE UPLOADING : ", "SUCCESSFUL")
+                        Snackbar.make(
+                            view,
+                            "Thanks For Your Contribution !!",
+                            Snackbar.LENGTH_SHORT
                         )
+                            .setBackgroundTint(resources.getColor(R.color.dark_green))
                             .show()
                     }.addOnFailureListener {
-                        Log.e("JOKE UPLOADING : ", "FAILED")
-                        Toast.makeText(
-                            requireContext(),
-                            "Ooops !! There was some error",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Log.d("JOKE UPLOADING : ", "FAILED")
+                        Snackbar.make(
+                            view,
+                            "Seems Like Something Unexpected Happened",
+                            Snackbar.LENGTH_SHORT
+                        )
+                            .setBackgroundTint(resources.getColor(R.color.dark_green))
+                            .show()
                     }
                 binding.triggerMotionSceneButton.performClick()
                 binding.postJokeEditText.text = null

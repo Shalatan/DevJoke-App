@@ -7,13 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.snackbar.Snackbar
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
 import com.shalatan.devjoke.util.ZoomOutPageTransformer
@@ -23,7 +23,6 @@ const val TAG = "OverviewFragment : "
 const val VIEW_PAGER_POSITION = "com.shalatan.devjoke.VIEW_PAGER_POSITION"
 const val shareText =
     "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more such DevJokes and share your DevJokes/Puns with other devs"
-
 
 class OverviewFragment : Fragment() {
 
@@ -83,15 +82,17 @@ class OverviewFragment : Fragment() {
             val jokePosition = jokesViewPager.currentItem
             if (isRedActive) {
                 viewModel.deleteJoke(jokePosition)
-                Toast.makeText(requireContext(), "Joke Removed from Favourites", Toast.LENGTH_SHORT)
+                Snackbar.make(it, "Joke Removed From Favourites", Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(resources.getColor(R.color.dark_green))
                     .show()
-                Log.e("OverviewFragment : ", "deleted joke")
+                Log.d("OverviewFragment : ", "deleted joke")
                 makeButtonLikeable()
             } else {
                 viewModel.saveJoke(jokePosition)
-                Toast.makeText(requireContext(), "Joke Added to Favourites", Toast.LENGTH_SHORT)
+                Snackbar.make(it, "Joke Added To Favourites", Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(resources.getColor(R.color.dark_green))
                     .show()
-                Log.e("OverviewFragment : ", "inserted joke")
+                Log.d("OverviewFragment : ", "inserted joke")
                 makeButtonDisLikeable()
             }
         }
@@ -121,7 +122,7 @@ class OverviewFragment : Fragment() {
         val sharedPreferences =
             activity?.getSharedPreferences(VIEW_PAGER_POSITION, Context.MODE_PRIVATE) ?: return
         viewPagerPosition = sharedPreferences.getInt(VIEW_PAGER_POSITION, 0)
-        Log.e(TAG + "Enter Position - ", viewPagerPosition.toString())
+        Log.d(TAG + "Enter Position - ", viewPagerPosition.toString())
         jokesViewPager.setCurrentItem(viewPagerPosition, false)
     }
 
@@ -134,7 +135,7 @@ class OverviewFragment : Fragment() {
             putInt(VIEW_PAGER_POSITION, viewPagerPosition)
             apply()
         }
-        Log.e(TAG + "Exit Position - ", sharedPreferences.getInt(VIEW_PAGER_POSITION, 0).toString())
+        Log.d(TAG + "Exit Position - ", sharedPreferences.getInt(VIEW_PAGER_POSITION, 0).toString())
     }
 
     /**
@@ -161,7 +162,7 @@ class OverviewFragment : Fragment() {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-        shareIntent.putExtra(Intent.EXTRA_TEXT, com.shalatan.devjoke.ui.favourite.shareText)
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
         shareIntent.type = "image/png"
         startActivity(shareIntent)
     }

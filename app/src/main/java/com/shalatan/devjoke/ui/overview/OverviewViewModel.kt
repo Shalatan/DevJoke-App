@@ -3,6 +3,7 @@ package com.shalatan.devjoke.ui.overview
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shalatan.devjoke.data.Joke
 import com.shalatan.devjoke.database.JokeDAO
@@ -26,8 +27,12 @@ class OverviewViewModel(application: Application) : ViewModel() {
     val isJokeExistInDb: LiveData<Boolean>
         get() = _isJokeExistInDb
 
+//    var likeCounter = MutableLiveData<Int?>()
+
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+    private val firestoreDB = FirebaseFirestore.getInstance().collection("jokes")
 
     init {
         Log.e("OverviewViewModel : ", " view model created")
@@ -41,7 +46,7 @@ class OverviewViewModel(application: Application) : ViewModel() {
      */
     private suspend fun getJokes() {
         if (_jokesData.value.isNullOrEmpty()) {
-            _jokesData.value = FirebaseFirestore.getInstance().collection("jokes").get().await()
+            _jokesData.value = firestoreDB.get().await()
                 .toObjects(Joke::class.java)
             Log.e("OverviewViewModel : ", "Jokes Fetched")
         }
@@ -55,7 +60,14 @@ class OverviewViewModel(application: Application) : ViewModel() {
         val savedJoke = SavedJoke(joke!!.jokeId, joke.jokeText)
         coroutineScope.launch {
             db.insert(savedJoke)
+            incrementJokeLikedCount(position)
         }
+//        likeCounter.value = joke.jokeLiked
+    }
+
+    private fun incrementJokeLikedCount(position: Int) {
+        val jokeId = _jokesData.value?.get(position)!!.jokeId
+        firestoreDB.document(jokeId.toString()).update("jokeLiked", FieldValue.increment(1))
     }
 
     /**
@@ -66,7 +78,13 @@ class OverviewViewModel(application: Application) : ViewModel() {
         val savedJoke = SavedJoke(joke!!.jokeId, joke.jokeText)
         viewModelScope.launch {
             db.delete(savedJoke)
+            decrementJokeLikedCount(position)
         }
+    }
+
+    private fun decrementJokeLikedCount(position: Int) {
+        val jokeId = _jokesData.value?.get(position)!!.jokeId
+        firestoreDB.document(jokeId.toString()).update("jokeLiked", FieldValue.increment(-1))
     }
 
     /**
