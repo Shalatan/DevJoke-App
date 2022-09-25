@@ -21,7 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.shalatan.devjoke.R
-import com.shalatan.devjoke.data.SubmittedJoke
+import com.shalatan.devjoke.data.Joke
 import com.shalatan.devjoke.databinding.FragmentSubmitJokeBinding
 
 class SubmitJokeFragment : Fragment() {
@@ -29,6 +29,7 @@ class SubmitJokeFragment : Fragment() {
     private lateinit var binding: FragmentSubmitJokeBinding
     private var isConditionAccepted = false
     private var isJokePostingActive = true
+    private var jokeId = 1000
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,8 +47,8 @@ class SubmitJokeFragment : Fragment() {
         binding.postJokeButton.setOnClickListener { view ->
             if (isJokePostingActive) {
                 val jokeText = binding.postJokeEditText.text.toString()
-                val submittedJoke = SubmittedJoke(jokeText)
-                db.collection("submittedJokes").add(submittedJoke)
+                val submittedJoke = Joke(jokeId,jokeText)
+                db.collection("jokes").document(jokeId.toString()).set(submittedJoke)
                     .addOnSuccessListener {
                         Log.d("JOKE UPLOADING : ", "SUCCESSFUL")
                         Snackbar.make(
@@ -57,6 +58,7 @@ class SubmitJokeFragment : Fragment() {
                         )
                             .setBackgroundTint(resources.getColor(R.color.dark_green))
                             .show()
+                        jokeId++
                     }.addOnFailureListener {
                         Log.d("JOKE UPLOADING : ", "FAILED")
                         Snackbar.make(

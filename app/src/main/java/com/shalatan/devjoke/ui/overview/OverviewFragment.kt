@@ -15,6 +15,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import com.shalatan.devjoke.R
+import com.shalatan.devjoke.database.JokeDatabase
+import com.shalatan.devjoke.database.JokeRepository
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
 import com.shalatan.devjoke.util.ZoomOutPageTransformer
 import com.shalatan.devjoke.util.shareView
@@ -40,7 +42,9 @@ class OverviewFragment : Fragment() {
 
         binding = FragmentOverviewBinding.inflate(inflater)
 
-        viewModelFactory = OverviewViewModelFactory(requireNotNull(activity).application)
+        val dao = JokeDatabase.getInstance(requireContext()).jokeDAO
+        val repository = JokeRepository(dao)
+        viewModelFactory = OverviewViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(OverviewViewModel::class.java)
 
         jokesViewPager = binding.jokesViewer
@@ -49,11 +53,11 @@ class OverviewFragment : Fragment() {
         jokesViewPager.setPageTransformer(ZoomOutPageTransformer())
 
         //observe jokesData and submit it to viewPager adapter
-        viewModel.jokesData.observe(viewLifecycleOwner, {
+        viewModel.jokesData.observe(viewLifecycleOwner) {
             it.let(jokeAdapter::submitList)
             scroll()
             Log.e(TAG, "Jokes Fetched")
-        })
+        }
 
         //when scrolled, check if new joke is already liked by the user
         jokesViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -69,13 +73,13 @@ class OverviewFragment : Fragment() {
         })
 
         //observe isJokeExistInDb to check if current joke is already liked or not
-        viewModel.isJokeExistInDb.observe(viewLifecycleOwner, {
+        viewModel.isJokeExistInDb.observe(viewLifecycleOwner) {
             if (it) {
                 makeButtonDisLikeable()
             } else {
                 makeButtonLikeable()
             }
-        })
+        }
 
         //save the current joke and make necessary changes to button
         binding.likeButton.setOnClickListener {

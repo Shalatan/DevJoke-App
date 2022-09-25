@@ -6,13 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.shalatan.devjoke.database.JokeDAO
+import com.shalatan.devjoke.database.JokeRepository
 import com.shalatan.devjoke.database.SavedJoke
 import kotlinx.coroutines.launch
 
-class FavouriteJokeViewModel(private val db: JokeDAO) : ViewModel() {
+class FavouriteJokeViewModel(private val repository: JokeRepository) : ViewModel() {
 
-    val favouriteJokes: LiveData<List<SavedJoke>> = db.getAllSavedJokes()
+    val favouriteJokes: LiveData<List<SavedJoke>> = repository.getAllJokes
+
     private val firestoreDB = FirebaseFirestore.getInstance().collection("jokes")
 
     init {
@@ -23,7 +24,7 @@ class FavouriteJokeViewModel(private val db: JokeDAO) : ViewModel() {
         val savedJoke = favouriteJokes.value?.get(position)
         viewModelScope.launch {
             if (savedJoke != null) {
-                db.delete(savedJoke)
+                repository.deleteJoke(savedJoke)
                 decrementJokeLikedCount(position)
             }
         }

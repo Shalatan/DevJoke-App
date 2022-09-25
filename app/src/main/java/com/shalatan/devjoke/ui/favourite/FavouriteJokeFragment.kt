@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.database.JokeDatabase
+import com.shalatan.devjoke.database.JokeRepository
 import com.shalatan.devjoke.databinding.FragmentFavouriteJokeBinding
 import com.shalatan.devjoke.util.ZoomOutPageTransformer
 import com.shalatan.devjoke.util.shareView
@@ -38,9 +39,9 @@ class FavouriteJokeFragment : Fragment() {
 //        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
 //        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
 
-        val dataSource = JokeDatabase.getInstance(requireContext()).jokeDAO
-
-        viewModelFactory = FavouriteJokeViewModelFactory(dataSource)
+        val dao = JokeDatabase.getInstance(requireContext()).jokeDAO
+        val repository = JokeRepository(dao)
+        viewModelFactory = FavouriteJokeViewModelFactory(repository)
         viewModel =
             ViewModelProvider(this, viewModelFactory).get(FavouriteJokeViewModel::class.java)
 
@@ -57,7 +58,7 @@ class FavouriteJokeFragment : Fragment() {
         jokesViewPager.setPageTransformer(ZoomOutPageTransformer())
 
         //observe jokesData and submit it to viewPager adapter
-        viewModel.favouriteJokes.observe(viewLifecycleOwner, {
+        viewModel.favouriteJokes.observe(viewLifecycleOwner) {
             it.let(jokeAdapter::submitList)
             if (it.isEmpty()) {
                 binding.jokesViewer.visibility = View.GONE
@@ -73,7 +74,7 @@ class FavouriteJokeFragment : Fragment() {
                 binding.shareButton.isClickable = true
             }
             Log.e("FavouriteJokeFragment Saved Jokes : ", it?.size.toString())
-        })
+        }
 
         //share carView as image
         binding.shareButton.setOnClickListener {
