@@ -12,6 +12,7 @@
         android:theme="@style/SplashScreenTheme">
         <activity
             android:name=".MainActivity"
+            android:exported="true"
             android:screenOrientation="locked"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
