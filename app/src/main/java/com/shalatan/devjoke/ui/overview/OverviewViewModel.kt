@@ -7,11 +7,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.shalatan.devjoke.data.Joke
 import com.shalatan.devjoke.database.JokeRepository
 import com.shalatan.devjoke.database.SavedJoke
-import kotlinx.coroutines.Dispatchers
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class OverviewViewModel(private val repository: JokeRepository) : ViewModel() {
+@HiltViewModel
+class OverviewViewModel @Inject constructor(
+    private val repository: JokeRepository
+) : ViewModel() {
 
     private val _jokesData = MutableLiveData<List<Joke>>()
     val jokesData: LiveData<List<Joke>>

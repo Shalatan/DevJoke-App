@@ -1,6 +1,8 @@
 package com.shalatan.devjoke.database
 
-class JokeRepository(private val dao: JokeDAO) {
+import javax.inject.Inject
+
+class JokeRepository @Inject constructor(private val dao: JokeDAO) {
 
     val getAllJokes = dao.getAllSavedJokes()
 

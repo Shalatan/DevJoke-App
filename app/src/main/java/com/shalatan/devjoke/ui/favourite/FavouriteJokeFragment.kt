@@ -9,23 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.shalatan.devjoke.R
-import com.shalatan.devjoke.database.JokeDatabase
-import com.shalatan.devjoke.database.JokeRepository
 import com.shalatan.devjoke.databinding.FragmentFavouriteJokeBinding
+import com.shalatan.devjoke.util.Constants
 import com.shalatan.devjoke.util.ZoomOutPageTransformer
 import com.shalatan.devjoke.util.shareView
+import dagger.hilt.android.AndroidEntryPoint
 
-const val shareText =
-    "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more DevJokes and share your DevJokes/Puns with other devs"
-
+@AndroidEntryPoint
 class FavouriteJokeFragment : Fragment() {
 
-    private lateinit var viewModelFactory: FavouriteJokeViewModelFactory
-    private lateinit var viewModel: FavouriteJokeViewModel
+    private val viewModel: FavouriteJokeViewModel by viewModels()
     private lateinit var binding: FragmentFavouriteJokeBinding
     private lateinit var favouriteAnimation: AnimationDrawable
 
@@ -38,13 +35,6 @@ class FavouriteJokeFragment : Fragment() {
 
 //        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
 //        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
-
-        val dao = JokeDatabase.getInstance(requireContext()).jokeDAO
-        val repository = JokeRepository(dao)
-        viewModelFactory = FavouriteJokeViewModelFactory(repository)
-        viewModel =
-            ViewModelProvider(this, viewModelFactory).get(FavouriteJokeViewModel::class.java)
-
 //        val constraintLayout = binding.favouriteJokeFragmentConstraintLayout.apply {
 //            setBackgroundResource(R.drawable.favourite_fragment_animation)
 //            favouriteAnimation = background as AnimationDrawable
@@ -76,7 +66,7 @@ class FavouriteJokeFragment : Fragment() {
             Log.e("FavouriteJokeFragment Saved Jokes : ", it?.size.toString())
         }
 
-        //share carView as image
+        //share cardView as image
         binding.shareButton.setOnClickListener {
             shareCardView(binding.jokesViewer.children.single())
         }
@@ -104,7 +94,7 @@ class FavouriteJokeFragment : Fragment() {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
+        shareIntent.putExtra(Intent.EXTRA_TEXT, Constants.INTENT_MESSAGE)
         shareIntent.type = "image/png"
         startActivity(shareIntent)
     }

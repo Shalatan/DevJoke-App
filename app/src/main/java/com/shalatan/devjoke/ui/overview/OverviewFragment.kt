@@ -9,27 +9,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import com.shalatan.devjoke.R
-import com.shalatan.devjoke.database.JokeDatabase
-import com.shalatan.devjoke.database.JokeRepository
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
+import com.shalatan.devjoke.util.Constants
 import com.shalatan.devjoke.util.ZoomOutPageTransformer
 import com.shalatan.devjoke.util.shareView
+import dagger.hilt.android.AndroidEntryPoint
 
 const val TAG = "OverviewFragment : "
 const val VIEW_PAGER_POSITION = "com.shalatan.devjoke.VIEW_PAGER_POSITION"
-const val shareText =
-    "Install https://play.google.com/store/apps/details?id=com.shalatan.devjoke for more such DevJokes and share your DevJokes/Puns with other devs"
 
+@AndroidEntryPoint
 class OverviewFragment : Fragment() {
 
-    private lateinit var viewModelFactory: OverviewViewModelFactory
-    private lateinit var viewModel: OverviewViewModel
+    private val viewModel : OverviewViewModel by viewModels()
+
     private lateinit var jokesViewPager: ViewPager2
     private lateinit var binding: FragmentOverviewBinding
     private var isRedActive = false
@@ -41,11 +40,6 @@ class OverviewFragment : Fragment() {
     ): View {
 
         binding = FragmentOverviewBinding.inflate(inflater)
-
-        val dao = JokeDatabase.getInstance(requireContext()).jokeDAO
-        val repository = JokeRepository(dao)
-        viewModelFactory = OverviewViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(OverviewViewModel::class.java)
 
         jokesViewPager = binding.jokesViewer
         val jokeAdapter = JokeAdapter()
@@ -166,7 +160,7 @@ class OverviewFragment : Fragment() {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
+        shareIntent.putExtra(Intent.EXTRA_TEXT, Constants.INTENT_MESSAGE)
         shareIntent.type = "image/png"
         startActivity(shareIntent)
     }

@@ -8,9 +8,14 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shalatan.devjoke.database.JokeRepository
 import com.shalatan.devjoke.database.SavedJoke
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavouriteJokeViewModel(private val repository: JokeRepository) : ViewModel() {
+@HiltViewModel
+class FavouriteJokeViewModel @Inject constructor(
+    private val repository: JokeRepository
+) : ViewModel() {
 
     val favouriteJokes: LiveData<List<SavedJoke>> = repository.getAllJokes
 

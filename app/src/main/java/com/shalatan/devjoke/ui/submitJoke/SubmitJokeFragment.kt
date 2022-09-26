@@ -23,7 +23,9 @@ import com.google.firebase.ktx.Firebase
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.data.Joke
 import com.shalatan.devjoke.databinding.FragmentSubmitJokeBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SubmitJokeFragment : Fragment() {
 
     private lateinit var binding: FragmentSubmitJokeBinding
