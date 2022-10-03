@@ -3,26 +3,24 @@ package com.shalatan.devjoke.ui.submitJoke
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
-import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.data.Joke
 import com.shalatan.devjoke.databinding.FragmentSubmitJokeBinding
+import com.shalatan.devjoke.util.hideKeyboard
+import com.shalatan.devjoke.util.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -52,28 +50,14 @@ class SubmitJokeFragment : Fragment() {
                 val submittedJoke = Joke(jokeId,jokeText)
                 db.collection("jokes").document(jokeId.toString()).set(submittedJoke)
                     .addOnSuccessListener {
-                        Log.d("JOKE UPLOADING : ", "SUCCESSFUL")
-                        Snackbar.make(
-                            view,
-                            "Thanks For Your Contribution !!",
-                            Snackbar.LENGTH_SHORT
-                        )
-                            .setBackgroundTint(resources.getColor(R.color.dark_green))
-                            .show()
+                        view.showSnackBar(R.string.joke_posted_success)
                         jokeId++
                     }.addOnFailureListener {
-                        Log.d("JOKE UPLOADING : ", "FAILED")
-                        Snackbar.make(
-                            view,
-                            "Seems Like Something Unexpected Happened",
-                            Snackbar.LENGTH_SHORT
-                        )
-                            .setBackgroundTint(resources.getColor(R.color.dark_green))
-                            .show()
+                        view.showSnackBar(R.string.joke_posted_failure)
                     }
                 binding.triggerMotionSceneButton.performClick()
                 binding.postJokeEditText.text = null
-                binding.postJokeEditText.hideKeyboard()
+                view.hideKeyboard(context)
                 makeButtonPostAgain(binding.postJokeButton)
             } else {
                 binding.triggerMotionSceneButton.performClick()
@@ -117,14 +101,6 @@ class SubmitJokeFragment : Fragment() {
             }
         })
         oa1.start()
-    }
-
-    /**
-     * hide soft-keyboard
-     */
-    private fun View.hideKeyboard() {
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 
     private fun makeButtonPostJoke(postJokeButton: Button) {

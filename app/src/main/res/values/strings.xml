@@ -9,4 +9,15 @@
     <string name="notice_text">Rule :\n1. Only post DevJokes.\n2. Do not use any abusive or offensive words\n3. Joke would be pushed into main thread only after screening of unaccepted words or duplication.</string>
     <string name="card_locked_text">Locked.. 🔒\n<u>Accept to activate the Card</u></string>
     <string name="thank_you_text">Thank You For Contributing\nHope your startup becomes Unicorn ;-)</string>
+
+    // notification
+    <string name="notification_channel_id">daily_notification_channel_id</string>
+    <string name="notification_channel_name">daily_notification_channel_name</string>
+
+    // snackbar messages
+    <string name="joke_liked">Joke added to favourites</string>
+    <string name="joke_unliked">Joke removed from favourites</string>
+    <string name="joke_posted_success">Thanks for your Joke !!</string>
+    <string name="joke_posted_failure">Thanks for your Joke !!</string>
+
 </resources>

@@ -28,7 +28,6 @@ class OverviewViewModel @Inject constructor(
     private val firestoreDB = FirebaseFirestore.getInstance().collection("jokes")
 
     init {
-        Log.e("OverviewViewModel : ", " view model created")
         viewModelScope.launch {
             getJokes()
         }
@@ -39,8 +38,7 @@ class OverviewViewModel @Inject constructor(
      */
     private suspend fun getJokes() {
         if (_jokesData.value.isNullOrEmpty()) {
-            _jokesData.value = firestoreDB.get().await()
-                .toObjects(Joke::class.java)
+            _jokesData.value = firestoreDB.get().await().toObjects(Joke::class.java)
             Log.e("OverviewViewModel : ", "Jokes Fetched")
         }
     }
@@ -53,15 +51,7 @@ class OverviewViewModel @Inject constructor(
         val savedJoke = SavedJoke(joke!!.jokeId, joke.jokeText)
         viewModelScope.launch {
             repository.insertJoke(savedJoke)
-            incrementJokeLikedCount(position)
-        }
-//        likeCounter.value = joke.jokeLiked
-    }
-
-    private fun incrementJokeLikedCount(position: Int) {
-        val jokeId = _jokesData.value?.get(position)!!.jokeId
-        viewModelScope.launch {
-            firestoreDB.document(jokeId.toString()).update("jokeLiked", FieldValue.increment(1))
+            firestoreDB.document(joke.jokeId.toString()).update("jokeLiked",FieldValue.increment(1))
         }
     }
 
@@ -73,19 +63,12 @@ class OverviewViewModel @Inject constructor(
         val savedJoke = SavedJoke(joke!!.jokeId, joke.jokeText)
         viewModelScope.launch {
             repository.deleteJoke(savedJoke)
-            decrementJokeLikedCount(position)
-        }
-    }
-
-    private fun decrementJokeLikedCount(position: Int) {
-        val jokeId = _jokesData.value?.get(position)!!.jokeId
-        viewModelScope.launch {
-            firestoreDB.document(jokeId.toString()).update("jokeLiked", FieldValue.increment(-1))
+            firestoreDB.document(joke.jokeId.toString()).update("jokeLiked", FieldValue.increment(-1))
         }
     }
 
     /**
-     * check if joke at 'position' already exists or not
+     * check if joke at 'position' already liked or not
      */
     fun isJokeSavedInDatabase(position: Int) {
         val currentJokeId = _jokesData.value?.get(position)!!.jokeId

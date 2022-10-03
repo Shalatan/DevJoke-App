@@ -11,12 +11,12 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.databinding.FragmentFavouriteJokeBinding
 import com.shalatan.devjoke.util.Constants
 import com.shalatan.devjoke.util.ZoomOutPageTransformer
 import com.shalatan.devjoke.util.shareView
+import com.shalatan.devjoke.util.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -74,9 +74,7 @@ class FavouriteJokeFragment : Fragment() {
         binding.likeButton.setOnClickListener {
             val position = jokesViewPager.currentItem
             viewModel.deleteSavedJoke(position)
-            Snackbar.make(it, "Joke Removed From Favourites", Snackbar.LENGTH_SHORT)
-                .setBackgroundTint(resources.getColor(R.color.dark_green))
-                .show()
+            it.showSnackBar(R.string.joke_unliked)
         }
 
         binding.savedListButton.setOnClickListener {

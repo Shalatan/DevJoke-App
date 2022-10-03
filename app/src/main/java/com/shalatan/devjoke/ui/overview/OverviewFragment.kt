@@ -1,7 +1,11 @@
 package com.shalatan.devjoke.ui.overview
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,9 +20,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
-import com.shalatan.devjoke.util.Constants
-import com.shalatan.devjoke.util.ZoomOutPageTransformer
-import com.shalatan.devjoke.util.shareView
+import com.shalatan.devjoke.util.*
 import dagger.hilt.android.AndroidEntryPoint
 
 const val TAG = "OverviewFragment : "
@@ -27,7 +29,7 @@ const val VIEW_PAGER_POSITION = "com.shalatan.devjoke.VIEW_PAGER_POSITION"
 @AndroidEntryPoint
 class OverviewFragment : Fragment() {
 
-    private val viewModel : OverviewViewModel by viewModels()
+    private val viewModel: OverviewViewModel by viewModels()
 
     private lateinit var jokesViewPager: ViewPager2
     private lateinit var binding: FragmentOverviewBinding
@@ -69,7 +71,7 @@ class OverviewFragment : Fragment() {
         //observe isJokeExistInDb to check if current joke is already liked or not
         viewModel.isJokeExistInDb.observe(viewLifecycleOwner) {
             if (it) {
-                makeButtonDisLikeable()
+                makeButtonUnLikeable()
             } else {
                 makeButtonLikeable()
             }
@@ -80,18 +82,12 @@ class OverviewFragment : Fragment() {
             val jokePosition = jokesViewPager.currentItem
             if (isRedActive) {
                 viewModel.deleteJoke(jokePosition)
-                Snackbar.make(it, "Joke Removed From Favourites", Snackbar.LENGTH_SHORT)
-                    .setBackgroundTint(resources.getColor(R.color.dark_green))
-                    .show()
-                Log.d("OverviewFragment : ", "deleted joke")
+                it.showSnackBar(R.string.joke_unliked)
                 makeButtonLikeable()
             } else {
                 viewModel.saveJoke(jokePosition)
-                Snackbar.make(it, "Joke Added To Favourites", Snackbar.LENGTH_SHORT)
-                    .setBackgroundTint(resources.getColor(R.color.dark_green))
-                    .show()
-                Log.d("OverviewFragment : ", "inserted joke")
-                makeButtonDisLikeable()
+                it.showSnackBar(R.string.joke_liked)
+                makeButtonUnLikeable()
             }
         }
 
@@ -111,6 +107,12 @@ class OverviewFragment : Fragment() {
             val directions =
                 OverviewFragmentDirections.actionOverviewFragmentToSubmitJokeFragment()
             findNavController().navigate(directions, extras)
+        }
+        binding.notificationButton.setOnClickListener {
+            sendNotification(
+                getString(R.string.notification_channel_id),
+                getString(R.string.notification_channel_name)
+            )
         }
         return binding.root
     }
@@ -137,15 +139,15 @@ class OverviewFragment : Fragment() {
     }
 
     /**
-     * set the drawable to red heart when user likes the current joke or current joke was already liked
+     * set the drawable to red heart when user likes the current joke or if current joke was already liked
      */
-    private fun makeButtonDisLikeable() {
+    private fun makeButtonUnLikeable() {
         binding.likeButton.setImageResource(R.drawable.ic_red_heart)
         isRedActive = true
     }
 
     /**
-     * set the drawable to white heart when user unlikes the joke or current joke was not already liked
+     * set the drawable to white heart when user unlikes the joke or if current joke was not already liked
      */
     private fun makeButtonLikeable() {
         binding.likeButton.setImageResource(R.drawable.ic_heart)
@@ -163,5 +165,25 @@ class OverviewFragment : Fragment() {
         shareIntent.putExtra(Intent.EXTRA_TEXT, Constants.INTENT_MESSAGE)
         shareIntent.type = "image/png"
         startActivity(shareIntent)
+    }
+
+    private fun sendNotification(channelId: String, channelName: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_LOW
+            )
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.RED
+            notificationChannel.enableVibration(true)
+            notificationChannel.description = "Waah Badhiya Joke Tha HAHAHAHAHA"
+
+            val notificationManager = requireActivity().getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager.createNotificationChannel(notificationChannel)
+            notificationManager.sendNotification("Waah Kya Notification Bheja", requireContext())
+        }
     }
 }

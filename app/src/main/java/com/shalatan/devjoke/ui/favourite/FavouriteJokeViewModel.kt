@@ -1,6 +1,5 @@
 package com.shalatan.devjoke.ui.favourite
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,22 +20,13 @@ class FavouriteJokeViewModel @Inject constructor(
 
     private val firestoreDB = FirebaseFirestore.getInstance().collection("jokes")
 
-    init {
-        Log.e("OverviewViewModel : ", " view model created")
-    }
-
     fun deleteSavedJoke(position: Int) {
         val savedJoke = favouriteJokes.value?.get(position)
         viewModelScope.launch {
             if (savedJoke != null) {
                 repository.deleteJoke(savedJoke)
-                decrementJokeLikedCount(position)
+                firestoreDB.document(savedJoke.jokeId.toString()).update("jokeLiked", FieldValue.increment(-1))
             }
         }
-    }
-
-    private fun decrementJokeLikedCount(position: Int) {
-        val jokeId = favouriteJokes.value?.get(position)!!.jokeId
-        firestoreDB.document(jokeId.toString()).update("jokeLiked", FieldValue.increment(-1))
     }
 }
