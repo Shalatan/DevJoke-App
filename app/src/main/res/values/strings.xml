@@ -12,12 +12,13 @@
 
     // notification
     <string name="notification_channel_id">daily_notification_channel_id</string>
-    <string name="notification_channel_name">daily_notification_channel_name</string>
+    <string name="notification_channel_name">Daily Joke</string>
 
     // snackbar messages
     <string name="joke_liked">Joke added to favourites</string>
     <string name="joke_unliked">Joke removed from favourites</string>
     <string name="joke_posted_success">Thanks for your Joke !!</string>
     <string name="joke_posted_failure">Thanks for your Joke !!</string>
+    <string name="testing">Will be implemented</string>
 
 </resources>

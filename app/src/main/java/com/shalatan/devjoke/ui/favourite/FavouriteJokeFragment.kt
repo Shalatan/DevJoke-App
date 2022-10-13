@@ -24,7 +24,6 @@ class FavouriteJokeFragment : Fragment() {
 
     private val viewModel: FavouriteJokeViewModel by viewModels()
     private lateinit var binding: FragmentFavouriteJokeBinding
-    private lateinit var favouriteAnimation: AnimationDrawable
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,14 +31,6 @@ class FavouriteJokeFragment : Fragment() {
     ): View {
 
         binding = FragmentFavouriteJokeBinding.inflate(inflater)
-
-//        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
-//        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
-//        val constraintLayout = binding.favouriteJokeFragmentConstraintLayout.apply {
-//            setBackgroundResource(R.drawable.favourite_fragment_animation)
-//            favouriteAnimation = background as AnimationDrawable
-//        }
-//        favouriteAnimation.start()
 
         //set up view pager
         val jokesViewPager = binding.jokesViewer

@@ -1,11 +1,7 @@
 package com.shalatan.devjoke.ui.overview
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,7 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.snackbar.Snackbar
 import com.shalatan.devjoke.R
 import com.shalatan.devjoke.databinding.FragmentOverviewBinding
 import com.shalatan.devjoke.util.*
@@ -97,8 +92,6 @@ class OverviewFragment : Fragment() {
         }
 
         binding.savedListButton.setOnClickListener {
-//            exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
-//            reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z,false)
             findNavController().navigate(OverviewFragmentDirections.actionOverviewFragmentToFavouriteJokeFragment())
         }
 
@@ -109,10 +102,7 @@ class OverviewFragment : Fragment() {
             findNavController().navigate(directions, extras)
         }
         binding.notificationButton.setOnClickListener {
-            sendNotification(
-                getString(R.string.notification_channel_id),
-                getString(R.string.notification_channel_name)
-            )
+            it.showSnackBar(R.string.testing)
         }
         return binding.root
     }
@@ -165,25 +155,5 @@ class OverviewFragment : Fragment() {
         shareIntent.putExtra(Intent.EXTRA_TEXT, Constants.INTENT_MESSAGE)
         shareIntent.type = "image/png"
         startActivity(shareIntent)
-    }
-
-    private fun sendNotification(channelId: String, channelName: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel(
-                channelId,
-                channelName,
-                NotificationManager.IMPORTANCE_LOW
-            )
-            notificationChannel.enableLights(true)
-            notificationChannel.lightColor = Color.RED
-            notificationChannel.enableVibration(true)
-            notificationChannel.description = "Waah Badhiya Joke Tha HAHAHAHAHA"
-
-            val notificationManager = requireActivity().getSystemService(
-                NotificationManager::class.java
-            )
-            notificationManager.createNotificationChannel(notificationChannel)
-            notificationManager.sendNotification("Waah Kya Notification Bheja", requireContext())
-        }
     }
 }

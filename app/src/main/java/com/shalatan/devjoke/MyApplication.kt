@@ -1,31 +1,30 @@
 package com.shalatan.devjoke
 
 import android.app.Application
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.os.Build
-import com.shalatan.devjoke.util.Constants
+import androidx.work.Constraints
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.shalatan.devjoke.notification.NotificationWorker
 import dagger.hilt.android.HiltAndroidApp
+import java.util.concurrent.TimeUnit
 
 @HiltAndroidApp
-class MyApplication : Application(){
+class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        createNotificationChannel()
+        notification()
     }
-    private fun createNotificationChannel(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val channel = NotificationChannel(
-                Constants.COUNTER_CHANNEL_ID,
-                "Counter",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            channel.description = "Testing Testing"
 
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
+    private fun notification() {
+        val workManager = WorkManager.getInstance(applicationContext)
+        val constraints = Constraints.Builder()
+            .build()
+
+        val work = PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.MINUTES)
+            .setConstraints(constraints)
+            .build()
+        workManager.enqueue(work)
     }
+
 }
